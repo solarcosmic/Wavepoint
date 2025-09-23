@@ -28,16 +28,19 @@ public final class Wavepoint extends JavaPlugin implements Listener {
         WvConfig.save();
         getCommand("wp").setExecutor(new WaypointCommand());
         Bukkit.getServer().getPluginManager().registerEvents(this, this);
+        logger.log("Retrieving from disk...");
+        WvWaypoints.loadAll();
     }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Bukkit.getLogger().info("Checking for players");
-        new WvConfigHandler().checkAddPlayer(event.getPlayer());
+        //new WvConfigHandler().checkAddPlayer(event.getPlayer());
     }
 
     @Override
     public void onDisable() {
+        logger.log("Wavepoint will now begin writing to disk, please do not force kill the server as this server may lose waypoints!");
         WvWaypoints.saveFromQueue();
         logger.log("Wavepoint has disabled!");
     }

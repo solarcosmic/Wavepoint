@@ -15,7 +15,7 @@ import java.util.UUID;
 public class WvList {
 
     public void showList(Player player) {
-        for (Map.Entry<UUID, List<Waypoint>> entry : WvWaypoints.waypointQueue.entrySet()) {
+        for (Map.Entry<UUID, List<Waypoint>> entry : WvWaypoints.waypoints.entrySet()) {
             UUID loopPlayerId = entry.getKey();
             if (loopPlayerId.equals(player.getUniqueId())) {
                 List<Waypoint> waypoints = entry.getValue();
