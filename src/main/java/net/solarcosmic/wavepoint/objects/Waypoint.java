@@ -1,11 +1,29 @@
 package net.solarcosmic.wavepoint.objects;
 
-public class Waypoint {
-    private String player;
-    private int location; //todo: change
+import org.bukkit.Location;
 
-    public Waypoint(String player, int location) {
-        this.player = player;
+import java.util.UUID;
+
+public class Waypoint {
+    private UUID playerId;
+    private Location location;
+    private String name;
+
+    public Waypoint(UUID playerId, Location location, String name) {
+        this.playerId = playerId;
         this.location = location;
+        this.name = name;
+    }
+
+    public UUID getPlayerId() {
+        return playerId;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public String getName() {
+        return name;
     }
 }

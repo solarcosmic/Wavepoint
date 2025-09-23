@@ -8,12 +8,12 @@ import java.io.File;
 import java.io.IOException;
 
 public class WvConfig {
-    private FileConfiguration customFile;
-    private File configFile;
-    private final Wavepoint plugin = Wavepoint.getInstance();
-    private final BetterLogger logger = new BetterLogger("&b[Wavepoint | Configuration]&r");
+    private static FileConfiguration customFile;
+    private static File configFile;
+    private static final Wavepoint plugin = Wavepoint.getInstance();
+    private static final BetterLogger logger = new BetterLogger("&b[Wavepoint | Configuration]&r");
 
-    public void create() {
+    public static void create() {
         configFile = new File(plugin.getDataFolder(), "waypoints.yml");
         if (!configFile.exists()) {
             try {
@@ -23,13 +23,15 @@ public class WvConfig {
             }
         }
         customFile = YamlConfiguration.loadConfiguration(configFile);
+        System.out.println("Process finished: " + customFile);
     }
 
-    public FileConfiguration get() {
+    public static FileConfiguration get() {
+        System.out.println("Fetching: " + customFile);
         return customFile;
     }
 
-    public void save() {
+    public static void save() {
         try {
             customFile.save(configFile);
         } catch (IOException e) {
@@ -37,7 +39,7 @@ public class WvConfig {
         }
     }
 
-    public void reload() {
+    public static void reload() {
         customFile = YamlConfiguration.loadConfiguration(configFile);
     }
 }
