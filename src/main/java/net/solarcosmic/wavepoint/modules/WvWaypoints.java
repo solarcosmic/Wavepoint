@@ -31,11 +31,18 @@ public class WvWaypoints {
         waypointQueue.forEach((uuid, waypointList) -> {
             for (Waypoint waypoint : waypointList) {
                 System.out.println(waypoint.getName());
-                if (!(config.getStringList("waypoints." + uuid).contains(waypoint.getName()))) {
+                //if (!(config.getStringList("waypoints." + uuid).contains(waypoint.getName()))) {
                     String base = "waypoints." + uuid + "." + waypoint.getName();
+                    Location loc = waypoint.getLocation();
                     config.set(base + ".timestamp", waypoint.getTimestamp());
+                    config.set(base + ".world", loc.getWorld().getName());
+                    config.set(base + ".x", loc.x());
+                    config.set(base + ".y", loc.y());
+                    config.set(base + ".z", loc.z());
+                    config.set(base + ".pitch", loc.getPitch());
+                    config.set(base + ".yaw", loc.getYaw());
                     System.out.println("Waypoint config set: " + waypoint.getName());
-                }
+                //}
             }
         });
         WvConfig.save();
