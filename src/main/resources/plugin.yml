@@ -2,3 +2,6 @@ name: Wavepoint
 version: '1.0-SNAPSHOT'
 main: net.solarcosmic.wavepoint.Wavepoint
 api-version: '1.21'
+commands:
+  wp:
+    description: Waypoints

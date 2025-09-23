@@ -1,0 +1,2 @@
+# Whether Wavepoint should listen to waypoint requests.
+enable: true
