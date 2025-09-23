@@ -2,6 +2,7 @@ package net.solarcosmic.wavepoint;
 
 import net.solarcosmic.wavepoint.commands.WaypointCommand;
 import net.solarcosmic.wavepoint.modules.WvConfigHandler;
+import net.solarcosmic.wavepoint.modules.WvWaypoints;
 import net.solarcosmic.wavepoint.util.BetterLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -37,7 +38,8 @@ public final class Wavepoint extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
-        logger.log("Wavepoint is disabling!");
+        WvWaypoints.saveFromQueue();
+        logger.log("Wavepoint has disabled!");
     }
 
     public static Wavepoint getInstance() {

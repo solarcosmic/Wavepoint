@@ -8,11 +8,13 @@ public class Waypoint {
     private UUID playerId;
     private Location location;
     private String name;
+    private long timestamp;
 
     public Waypoint(UUID playerId, Location location, String name) {
         this.playerId = playerId;
         this.location = location;
         this.name = name;
+        this.timestamp = System.currentTimeMillis() / 1000;
     }
 
     public UUID getPlayerId() {
@@ -25,5 +27,9 @@ public class Waypoint {
 
     public String getName() {
         return name;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
     }
 }

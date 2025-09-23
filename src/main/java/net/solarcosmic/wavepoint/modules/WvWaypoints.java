@@ -1,7 +1,10 @@
 package net.solarcosmic.wavepoint.modules;
 
+import net.solarcosmic.wavepoint.WvConfig;
 import net.solarcosmic.wavepoint.objects.Waypoint;
 import org.bukkit.Location;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -11,6 +14,9 @@ import java.util.UUID;
 
 public class WvWaypoints {
     public static HashMap<UUID, List<Waypoint>> waypointQueue = new HashMap<>();
+    public static HashMap<UUID, List<Waypoint>> waypoints = new HashMap<>();
+    public static FileConfiguration config = WvConfig.get();
+    public static ConfigurationSection section = config.getConfigurationSection("waypoints");
 
     public static void create(Player player, String name) {
         // maybe do something like strip /wp list then do new set?
@@ -19,5 +25,24 @@ public class WvWaypoints {
         Waypoint waypoint = new Waypoint(player.getUniqueId(), loc, newSet);
         waypointQueue.computeIfAbsent(player.getUniqueId(), x -> new ArrayList<>()).add(waypoint);
         player.sendMessage("Waypoint created named '" + newSet + "' at: " + loc.x() + ", " + loc.y() + ", " + loc.z());
+    }
+
+    public static void saveFromQueue() {
+        waypointQueue.forEach((uuid, waypointList) -> {
+            for (Waypoint waypoint : waypointList) {
+                System.out.println(waypoint.getName());
+                if (!(config.getStringList("waypoints." + uuid).contains(waypoint.getName()))) {
+                    String base = "waypoints." + uuid + "." + waypoint.getName();
+                    config.set(base + ".timestamp", waypoint.getTimestamp());
+                    System.out.println("Waypoint config set: " + waypoint.getName());
+                }
+            }
+        });
+        WvConfig.save();
+        System.out.println("Saved all waypoints!");
+    }
+
+    public static void loadAll() {
+
     }
 }
