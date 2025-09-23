@@ -1,7 +1,9 @@
 package net.solarcosmic.wavepoint.commands;
 
 import net.solarcosmic.wavepoint.modules.WvList;
+import net.solarcosmic.wavepoint.modules.WvTeleport;
 import net.solarcosmic.wavepoint.modules.WvWaypoints;
+import net.solarcosmic.wavepoint.objects.Waypoint;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -15,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WaypointCommand implements TabExecutor {
-    public List<String> arguments = List.of("set", "list", "teleport");
+    public List<String> arguments = List.of("set", "list", "tp");
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(commandSender instanceof Player)) {
@@ -27,6 +29,14 @@ public class WaypointCommand implements TabExecutor {
         }
         if (args[0].equalsIgnoreCase("set")) {
             WvWaypoints.create((Player) commandSender, args[1]);
+        }
+        if (args[0].equalsIgnoreCase("tp")) {
+            Waypoint wp = WvWaypoints.getWaypoint(args[1]);
+            if (wp == null) {
+                commandSender.sendMessage("That waypoint does not exist!");
+            } else {
+                WvTeleport.teleport((Player) commandSender, wp);
+            }
         }
 
         /*

@@ -1,2 +1,5 @@
 # Whether Wavepoint should listen to waypoint requests.
 enable: true
+
+# Whether Wavepoint should be in debug mode - showing extra logs.
+debug: true

@@ -1,7 +1,6 @@
 package net.solarcosmic.wavepoint;
 
 import net.solarcosmic.wavepoint.commands.WaypointCommand;
-import net.solarcosmic.wavepoint.modules.WvConfigHandler;
 import net.solarcosmic.wavepoint.modules.WvWaypoints;
 import net.solarcosmic.wavepoint.util.BetterLogger;
 import org.bukkit.Bukkit;
@@ -14,11 +13,12 @@ import java.util.HashMap;
 
 public final class Wavepoint extends JavaPlugin implements Listener {
     private static Wavepoint instance;
-    private final BetterLogger logger = new BetterLogger("&b[Wavepoint]&r");
+    private final BetterLogger logger = new BetterLogger("Wavepoint");
     public static HashMap<String, String> storePlayers = new HashMap<>();
+    public static boolean isDebugEnabled = false;
     @Override
     public void onEnable() {
-        // Plugin startup logic
+        long time_start = System.currentTimeMillis();
         instance = this;
         logger.log("Wavepoint is up!");
         getConfig().options().copyDefaults();
@@ -28,21 +28,23 @@ public final class Wavepoint extends JavaPlugin implements Listener {
         WvConfig.save();
         getCommand("wp").setExecutor(new WaypointCommand());
         Bukkit.getServer().getPluginManager().registerEvents(this, this);
-        logger.log("Retrieving from disk...");
+        logger.debug("Retrieving from disk...");
         WvWaypoints.loadAll();
+        isDebugEnabled = getConfig().getBoolean("debug");
+        logger.log("Wavepoint ready! (" + (System.currentTimeMillis() - time_start) + "ms)");
     }
 
-    @EventHandler
+    /*@EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Bukkit.getLogger().info("Checking for players");
         //new WvConfigHandler().checkAddPlayer(event.getPlayer());
-    }
+    }*/
 
     @Override
     public void onDisable() {
         logger.log("Wavepoint will now begin writing to disk, please do not force kill the server as this server may lose waypoints!");
         WvWaypoints.saveFromQueue();
-        logger.log("Wavepoint has disabled!");
+        logger.log("Wavepoint has finished its shutdown process!");
     }
 
     public static Wavepoint getInstance() {

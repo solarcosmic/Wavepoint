@@ -15,15 +15,14 @@ import java.util.UUID;
 public class WvList {
 
     public void showList(Player player) {
-        for (Map.Entry<UUID, List<Waypoint>> entry : WvWaypoints.waypoints.entrySet()) {
+        StringBuilder waypointString = new StringBuilder("You currently own the following waypoints: ");
+        for (Map.Entry<UUID, Map<String, Waypoint>> entry : WvWaypoints.waypoints.entrySet()) {
+            Map<String, Waypoint> waypoints = entry.getValue();
             UUID loopPlayerId = entry.getKey();
             if (loopPlayerId.equals(player.getUniqueId())) {
-                List<Waypoint> waypoints = entry.getValue();
-                StringBuilder waypointString = new StringBuilder("You currently own the following waypoints:");
-                for (Waypoint wp : waypoints) {
-                    System.out.println(wp);
-                    waypointString.append(" ").append(wp.getName()).append(" ");
-                };
+                for (Map.Entry<String, Waypoint> entry2 : waypoints.entrySet()) {
+                    waypointString.append(" ").append(entry2.getKey()).append(" ");
+                }
                 player.sendMessage(waypointString.toString());
             }
         }

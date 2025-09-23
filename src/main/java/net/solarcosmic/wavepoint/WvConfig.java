@@ -23,11 +23,11 @@ public class WvConfig {
             }
         }
         customFile = YamlConfiguration.loadConfiguration(configFile);
-        System.out.println("Process finished: " + customFile);
+        logger.debug("Process finished: " + customFile);
     }
 
     public static FileConfiguration get() {
-        System.out.println("Fetching: " + customFile);
+        logger.debug("Fetching: " + customFile);
         return customFile;
     }
 

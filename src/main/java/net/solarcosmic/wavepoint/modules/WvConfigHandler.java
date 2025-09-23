@@ -16,7 +16,6 @@ public class WvConfigHandler {
         FileConfiguration config = WvConfig.get();
         ConfigurationSection section = config.getConfigurationSection("waypoints");
         String playerId = player.getUniqueId().toString();
-        System.out.println(playerId);
         String foundPath = "waypoints." + playerId;
         System.out.println(foundPath);
         if (!(config.getStringList("waypoints").contains(playerId))) {
