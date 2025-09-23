@@ -65,8 +65,8 @@ public class WvWaypoints {
                             wpSection.getDouble("x"),
                             wpSection.getDouble("y"),
                             wpSection.getDouble("z"),
-                            (float) wpSection.getDouble("pitch"),
-                            (float) wpSection.getDouble("yaw")
+                            Float.parseFloat(Objects.requireNonNull(wpSection.getString("pitch"))),
+                            Float.parseFloat(Objects.requireNonNull(wpSection.getString("yaw")))
                     );
                     UUID uuid = UUID.fromString(uid);
                     Waypoint waypoint = new Waypoint(uuid, newLoc, wp);
