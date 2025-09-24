@@ -1,9 +1,12 @@
 package net.solarcosmic.wavepoint.modules;
 
+import net.solarcosmic.wavepoint.Wavepoint;
 import net.solarcosmic.wavepoint.WvConfig;
+import net.solarcosmic.wavepoint.integrations.WvInCombatLogX;
 import net.solarcosmic.wavepoint.objects.Waypoint;
 import net.solarcosmic.wavepoint.util.BetterLogger;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -16,15 +19,24 @@ public class WvWaypoints {
     public static FileConfiguration config = WvConfig.get();
     public static ConfigurationSection section = config.getConfigurationSection("waypoints");
     private static final BetterLogger logger = new BetterLogger("&bWavepoint&r");
+    private static Wavepoint plugin = Wavepoint.getInstance();
 
-    public static void create(Player player, String name) {
+    public static Waypoint create(Player player, Location loc, String name) {
         // maybe do something like strip /wp list then do new set?
         String newSet = name.toLowerCase().replaceAll(" ", "_");
-        Location loc = player.getLocation();
         Waypoint waypoint = new Waypoint(player.getUniqueId(), loc, newSet);
+        if (Wavepoint.hasCombatLogXIntegration) {
+            if (WvInCombatLogX.isInCombat(player)) {
+                if (!plugin.getConfig().getBoolean("integrations.combatlogx.combat.set")) {
+                    player.sendMessage(ChatColor.RED + "You are currently in combat and cannot set a waypoint.");
+                    return null;
+                }
+            }
+        }
         Map<String, Waypoint> playerMap = waypoints.computeIfAbsent(player.getUniqueId(), k -> new HashMap<>());
         playerMap.put(newSet, waypoint);
         player.sendMessage("Waypoint created named '" + newSet + "' at: " + loc.x() + ", " + loc.y() + ", " + loc.z());
+        return waypoint;
     }
 
     public static void delete(Waypoint waypoint) {
@@ -90,7 +102,7 @@ public class WvWaypoints {
         }
     }
 
-    public static Waypoint getWaypoint(String name) {
+    public static Waypoint getGlobalWaypoint(String name) {
         for (Map.Entry<UUID, Map<String, Waypoint>> entry : waypoints.entrySet()) {
             Map<String, Waypoint> playerMap = waypoints.get(entry.getKey());
             for (Map.Entry<String, Waypoint> entry2 : playerMap.entrySet()) {
@@ -102,6 +114,12 @@ public class WvWaypoints {
             }
         }
         return null;
+    }
+
+    public static Waypoint getWaypoint(UUID uuid, String name) {
+        Map<String, Waypoint> playerMap = waypoints.get(uuid);
+        if (playerMap == null) return null;
+        return playerMap.get(name.toLowerCase());
     }
 
     public static ArrayList<String> buildList(UUID uuid) {

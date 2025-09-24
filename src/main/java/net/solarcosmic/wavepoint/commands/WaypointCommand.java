@@ -24,27 +24,28 @@ public class WaypointCommand implements TabExecutor {
             commandSender.sendMessage("You can only execute this command as a player!");
             return false;
         }
+        Player player = (Player) commandSender;
         if (args[0].equalsIgnoreCase("list")) {
-            new WvList().showList((Player) commandSender);
+            new WvList().showList(player);
         }
         if (args[0].equalsIgnoreCase("set")) {
-            WvWaypoints.create((Player) commandSender, args[1]);
+            WvWaypoints.create(player, player.getLocation(), args[1]);
         }
         if (args[0].equalsIgnoreCase("tp")) {
-            Waypoint wp = WvWaypoints.getWaypoint(args[1]);
+            Waypoint wp = WvWaypoints.getWaypoint(player.getUniqueId(), args[1]);
             if (wp == null) {
-                commandSender.sendMessage("That waypoint does not exist!");
+                player.sendMessage("That waypoint does not exist!");
             } else {
-                WvTeleport.teleport((Player) commandSender, wp);
+                WvTeleport.teleport(player, wp);
             }
         }
         if (args[0].equalsIgnoreCase("delete")) {
-            Waypoint wp = WvWaypoints.getWaypoint(args[1]);
+            Waypoint wp = WvWaypoints.getWaypoint(player.getUniqueId(), args[1]);
             if (wp == null) {
-                commandSender.sendMessage("That waypoint does not exist!");
+                player.sendMessage("That waypoint does not exist!");
             } else {
                 WvWaypoints.delete(wp);
-                commandSender.sendMessage("Waypoint deleted.");
+                player.sendMessage("Waypoint deleted.");
             }
         }
 

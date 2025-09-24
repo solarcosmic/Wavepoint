@@ -1,6 +1,7 @@
 package net.solarcosmic.wavepoint;
 
 import net.solarcosmic.wavepoint.commands.WaypointCommand;
+import net.solarcosmic.wavepoint.integrations.WvInCombatLogX;
 import net.solarcosmic.wavepoint.integrations.WvInVault;
 import net.solarcosmic.wavepoint.modules.WvTeleport;
 import net.solarcosmic.wavepoint.modules.WvWaypoints;
@@ -22,6 +23,7 @@ public final class Wavepoint extends JavaPlugin implements Listener {
     public static HashMap<String, String> storePlayers = new HashMap<>();
     public static boolean isDebugEnabled = false;
     public static boolean hasVaultIntegration = false;
+    public static boolean hasCombatLogXIntegration = false;
 
     @Override
     public void onEnable() {
@@ -40,6 +42,9 @@ public final class Wavepoint extends JavaPlugin implements Listener {
         isDebugEnabled = getConfig().getBoolean("debug");
         if (getConfig().getBoolean("integrations.vault.enabled")) {
             new WvInVault();
+        }
+        if (getConfig().getBoolean("integrations.combatlogx.enabled")) {
+            new WvInCombatLogX();
         }
         logger.log("Wavepoint ready! (" + (System.currentTimeMillis() - time_start) + "ms)");
     }

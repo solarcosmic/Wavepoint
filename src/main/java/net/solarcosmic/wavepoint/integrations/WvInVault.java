@@ -14,7 +14,7 @@ import static org.bukkit.Bukkit.getServer;
 public class WvInVault {
     private static Economy econ = null;
     private static Wavepoint plugin = Wavepoint.getInstance();
-    private final BetterLogger logger = new BetterLogger("Wavepoint/VaultIntegration");
+    private final BetterLogger logger = new BetterLogger("Wavepoint/Integration");
 
     public WvInVault() {
         if (setupEconomy()) {

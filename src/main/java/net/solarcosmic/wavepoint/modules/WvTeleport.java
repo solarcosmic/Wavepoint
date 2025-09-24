@@ -3,6 +3,7 @@ package net.solarcosmic.wavepoint.modules;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import net.solarcosmic.wavepoint.Wavepoint;
+import net.solarcosmic.wavepoint.integrations.WvInCombatLogX;
 import net.solarcosmic.wavepoint.integrations.WvInVault;
 import net.solarcosmic.wavepoint.objects.Waypoint;
 import org.bukkit.ChatColor;
@@ -25,6 +26,15 @@ public class WvTeleport {
         BukkitTask task = new BukkitRunnable() {
             int count = 5;
             public void run() {
+                if (Wavepoint.hasCombatLogXIntegration) {
+                    if (WvInCombatLogX.isInCombat(player)) {
+                        if (!plugin.getConfig().getBoolean("integrations.combatlogx.combat.teleport")) {
+                            player.sendMessage(ChatColor.RED + "You are currently in combat! Teleport cancelled.");
+                            this.cancel();
+                            return;
+                        }
+                    }
+                }
                 if (Wavepoint.hasVaultIntegration) {
                     if (!WvTeleport.isCurrentlyTeleporting(player.getUniqueId())) {
                         this.cancel();

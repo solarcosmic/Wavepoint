@@ -7,11 +7,14 @@ debug: true
 # Below are integrations that work with other plugins.
 # If the integration is enabled, but the plugin or requirements aren't met, nothing will happen.
 integrations:
-  vault:
-    enabled: false       # Whether to integrate with Vault, for economy purposes.
-    charge_amount: 5     # How much money to charge the user per teleport.
-  combatlogx:
-    enabled: false       # Whether to integrate with CombatLogX.
+  vault:              # | https://www.spigotmc.org/resources/vault.34315/
+    enabled: true       # Whether to integrate with Vault, for economy purposes.
+    charge_amount: 5    # How much money to charge the user per teleport.
+  combatlogx:         # | https://www.spigotmc.org/resources/combatlogx.31689/
+    enabled: true       # Whether to integrate with CombatLogX.
+    combat:
+      set: false        # Whether to restrict setting waypoints during combat. false = restricted.
+      teleport: false   # Whether to restrict teleporting to waypoints during combat. false = restricted.
 
 # Allows the server to execute a command on a specific event. Use ${player} to reference the player.
 commands:

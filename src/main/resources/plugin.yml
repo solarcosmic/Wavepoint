@@ -2,8 +2,9 @@ name: Wavepoint
 version: '1.0-SNAPSHOT'
 main: net.solarcosmic.wavepoint.Wavepoint
 api-version: '1.21'
-depend:
+softdepend:
   - Vault
+  - CombatLogX
 commands:
   wp:
     description: Waypoints
