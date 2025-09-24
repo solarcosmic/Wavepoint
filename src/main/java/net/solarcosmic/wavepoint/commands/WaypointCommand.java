@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WaypointCommand implements TabExecutor {
-    public List<String> arguments = List.of("set", "list", "tp");
+    public List<String> arguments = List.of("set", "list", "tp", "delete");
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(commandSender instanceof Player)) {
@@ -68,10 +68,8 @@ public class WaypointCommand implements TabExecutor {
             return validArguments;
         }
         ArrayList<String> list = WvWaypoints.buildList(player.getUniqueId());
-        System.out.println(list);
         if (args.length == 2) {
             StringUtil.copyPartialMatches(args[1], list, validArguments2);
-            System.out.println(validArguments2);
             return validArguments2;
         }
         return List.of();

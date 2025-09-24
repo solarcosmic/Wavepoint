@@ -44,10 +44,10 @@ public final class Wavepoint extends JavaPlugin implements Listener {
     }*/
 
     @EventHandler
-    public void onPlayerMove(PlayerMoveEvent e) { // https://www.spigotmc.org/threads/check-if-the-player-has-moved.442917/#post-3829391
+    public void onPlayerMove(PlayerMoveEvent e) { // https://bukkit.org/threads/checking-if-player-moved-entire-block.238567/#post-2292237
         UUID uuid = e.getPlayer().getUniqueId();
         if (!WvTeleport.isCurrentlyTeleporting(uuid)) return;
-        if (e.getFrom().getZ() != e.getTo().getZ() && e.getFrom().getX() != e.getTo().getX()) {
+        if (e.getFrom().getX() != e.getTo().getX() || e.getFrom().getZ() != e.getTo().getZ()) {
             WvTeleport.setCurrentlyTeleporting(uuid, false);
             e.getPlayer().sendActionBar("You moved!");
         }

@@ -3,3 +3,12 @@ enable: true
 
 # Whether Wavepoint should be in debug mode - showing extra logs.
 debug: true
+
+integrations:
+  vault:
+    enabled: false       # Whether to integrate with Vault, for economy purposes.
+    charge_amount: 5     # How much money to charge the user per teleport.
+
+# Allows the server to execute a command on a specific event. Use ${player} to reference the player.
+commands:
+  teleport: ""              # For example: kick ${player} No teleporting!
