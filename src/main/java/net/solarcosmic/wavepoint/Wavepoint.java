@@ -1,6 +1,7 @@
 package net.solarcosmic.wavepoint;
 
 import net.solarcosmic.wavepoint.commands.WaypointCommand;
+import net.solarcosmic.wavepoint.integrations.WvInVault;
 import net.solarcosmic.wavepoint.modules.WvTeleport;
 import net.solarcosmic.wavepoint.modules.WvWaypoints;
 import net.solarcosmic.wavepoint.util.BetterLogger;
@@ -9,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
@@ -19,6 +21,8 @@ public final class Wavepoint extends JavaPlugin implements Listener {
     private final BetterLogger logger = new BetterLogger("Wavepoint");
     public static HashMap<String, String> storePlayers = new HashMap<>();
     public static boolean isDebugEnabled = false;
+    public static boolean hasVaultIntegration = false;
+
     @Override
     public void onEnable() {
         long time_start = System.currentTimeMillis();
@@ -34,6 +38,9 @@ public final class Wavepoint extends JavaPlugin implements Listener {
         logger.debug("Retrieving from disk...");
         WvWaypoints.loadAll();
         isDebugEnabled = getConfig().getBoolean("debug");
+        if (getConfig().getBoolean("integrations.vault.enabled")) {
+            new WvInVault();
+        }
         logger.log("Wavepoint ready! (" + (System.currentTimeMillis() - time_start) + "ms)");
     }
 
