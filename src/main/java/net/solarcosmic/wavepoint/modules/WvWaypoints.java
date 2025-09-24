@@ -27,6 +27,18 @@ public class WvWaypoints {
         player.sendMessage("Waypoint created named '" + newSet + "' at: " + loc.x() + ", " + loc.y() + ", " + loc.z());
     }
 
+    public static void delete(Waypoint waypoint) {
+        Map<String, Waypoint> playerMap = waypoints.get(waypoint.getPlayerId());
+        if (playerMap != null) {
+            for (Map.Entry<String, Waypoint> entry2 : playerMap.entrySet()) {
+                String wpName = entry2.getKey();
+                if (wpName.equalsIgnoreCase(waypoint.getName())) {
+                    playerMap.remove(wpName);
+                }
+            }
+        }
+    }
+
     public static void saveFromQueue() {
         waypoints.forEach((uuid, waypointList) -> {
             Map<String, Waypoint> playerMap = waypoints.get(uuid);
@@ -90,5 +102,19 @@ public class WvWaypoints {
             }
         }
         return null;
+    }
+
+    public static ArrayList<String> buildList(UUID uuid) {
+        ArrayList<String> list = new ArrayList<>();
+        for (Map.Entry<UUID, Map<String, Waypoint>> entry : WvWaypoints.waypoints.entrySet()) {
+            Map<String, Waypoint> waypoints = entry.getValue();
+            UUID loopPlayerId = entry.getKey();
+            if (loopPlayerId.equals(uuid)) {
+                for (Map.Entry<String, Waypoint> entry2 : waypoints.entrySet()) {
+                    list.add(entry2.getValue().getName());
+                }
+            }
+        }
+        return list;
     }
 }
