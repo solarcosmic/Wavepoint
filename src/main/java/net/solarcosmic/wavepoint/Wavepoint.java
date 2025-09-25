@@ -18,6 +18,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.UUID;
 
 public final class Wavepoint extends JavaPlugin implements Listener {
@@ -76,9 +77,13 @@ public final class Wavepoint extends JavaPlugin implements Listener {
     public void onPlayerMove(PlayerMoveEvent e) { // https://bukkit.org/threads/checking-if-player-moved-entire-block.238567/#post-2292237
         UUID uuid = e.getPlayer().getUniqueId();
         if (!WvTeleport.isCurrentlyTeleporting(uuid)) return;
-        if (e.getFrom().getX() != e.getTo().getX() || e.getFrom().getZ() != e.getTo().getZ()) {
+        if (e.getFrom().getBlockX() != e.getTo().getBlockX() || e.getFrom().getBlockY() != e.getTo().getBlockY() || e.getFrom().getBlockZ() != e.getTo().getBlockZ()) {
             WvTeleport.setCurrentlyTeleporting(uuid, false);
-            e.getPlayer().sendActionBar("You moved!");
+            if (Objects.equals(getConfig().getString("teleport.action_type", "action"), "message")) {
+                e.getPlayer().sendMessage(Wavepoint.prefix + ChatColor.translateAlternateColorCodes('&', WvLanguage.lang("wavepoint.waypoint_moved")));
+            } else {
+                e.getPlayer().sendActionBar(ChatColor.translateAlternateColorCodes('&', WvLanguage.lang("wavepoint.waypoint_moved")));
+            }
         }
     }
 

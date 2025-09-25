@@ -8,6 +8,7 @@ wavepoint:
   waypoint_no_exist: "This waypoint does not exist!"
   waypoint_hover_info: "Click to view info about this waypoint!"
   waypoint_location_hover: "Click to copy to clipboard!"
+  waypoint_moved: "You moved!"
 
 integrations:
   vault:

@@ -74,7 +74,7 @@ public class WaypointCommand implements TabExecutor {
             return validArguments;
         }
         ArrayList<String> list = WvWaypoints.buildList(player.getUniqueId());
-        if (args.length == 2) {
+        if (args.length == 2 && (args[0].equals("tp") || args[0].equals("delete") || args[0].equals("info"))) {
             StringUtil.copyPartialMatches(args[1], list, validArguments2);
             return validArguments2;
         }

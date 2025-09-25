@@ -5,6 +5,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.solarcosmic.wavepoint.Wavepoint;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -26,5 +27,11 @@ public class WvList {
             base.addExtra(comp);
         }
         player.sendMessage(base);
+        try {
+            for (String item : Wavepoint.getInstance().getConfig().getStringList("commands.list")) {
+                // index 0 out of bounds for length 0?
+                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), WvPlaceholders.doPlaceholder(item, player));
+            }
+        } catch (Exception ignored) {}
     }
 }

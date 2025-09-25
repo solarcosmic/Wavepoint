@@ -35,18 +35,26 @@ public class WvWaypoints {
         Map<String, Waypoint> playerMap = waypoints.computeIfAbsent(player.getUniqueId(), k -> new HashMap<>());
         playerMap.put(newSet, waypoint);
         player.sendMessage(Wavepoint.prefix + "Waypoint created named '" + newSet + "' at: " + Math.floor(loc.x()) + ", " + Math.floor(loc.y()) + ", " + Math.floor(loc.z()));
+        try {
+            for (String item : plugin.getConfig().getStringList("commands.set")) {
+                // index 0 out of bounds for length 0?
+                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), WvPlaceholders.doPlaceholder(item, player));
+            }
+        } catch (Exception ignored) {}
         return waypoint;
     }
 
     public static void delete(Waypoint waypoint) {
         Map<String, Waypoint> playerMap = waypoints.get(waypoint.getPlayerId());
         if (playerMap != null) {
-            for (Map.Entry<String, Waypoint> entry2 : playerMap.entrySet()) {
-                String wpName = entry2.getKey();
-                if (wpName.equalsIgnoreCase(waypoint.getName())) {
-                    playerMap.remove(wpName);
+            playerMap.entrySet().removeIf(entry -> entry.getKey().equalsIgnoreCase(waypoint.getName()));
+            try {
+                for (String item : plugin.getConfig().getStringList("commands.delete")) {
+                    // index 0 out of bounds for length 0?
+                    assert Bukkit.getPlayer(waypoint.getPlayerId()) != null;
+                    Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), WvPlaceholders.doPlaceholder(item, Bukkit.getPlayer(waypoint.getPlayerId())));
                 }
-            }
+            } catch (Exception ignored) {}
         }
     }
 
