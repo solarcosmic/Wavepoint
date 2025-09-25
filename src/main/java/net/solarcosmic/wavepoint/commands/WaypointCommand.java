@@ -1,10 +1,12 @@
 package net.solarcosmic.wavepoint.commands;
 
+import net.solarcosmic.wavepoint.Wavepoint;
+import net.solarcosmic.wavepoint.modules.WvInfo;
 import net.solarcosmic.wavepoint.modules.WvList;
 import net.solarcosmic.wavepoint.modules.WvTeleport;
 import net.solarcosmic.wavepoint.modules.WvWaypoints;
 import net.solarcosmic.wavepoint.objects.Waypoint;
-import org.bukkit.Location;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -21,10 +23,13 @@ public class WaypointCommand implements TabExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(commandSender instanceof Player)) {
-            commandSender.sendMessage("You can only execute this command as a player!");
+            commandSender.sendMessage(ChatColor.RED + "You can only execute this command as a player!");
             return false;
         }
         Player player = (Player) commandSender;
+        if (args.length < 1) {
+            return false;
+        }
         if (args[0].equalsIgnoreCase("list")) {
             new WvList().showList(player);
         }
@@ -34,7 +39,7 @@ public class WaypointCommand implements TabExecutor {
         if (args[0].equalsIgnoreCase("tp")) {
             Waypoint wp = WvWaypoints.getWaypoint(player.getUniqueId(), args[1]);
             if (wp == null) {
-                player.sendMessage("That waypoint does not exist!");
+                player.sendMessage(Wavepoint.prefix + ChatColor.RED + "That waypoint does not exist!");
             } else {
                 WvTeleport.teleport(player, wp);
             }
@@ -42,20 +47,20 @@ public class WaypointCommand implements TabExecutor {
         if (args[0].equalsIgnoreCase("delete")) {
             Waypoint wp = WvWaypoints.getWaypoint(player.getUniqueId(), args[1]);
             if (wp == null) {
-                player.sendMessage("That waypoint does not exist!");
+                player.sendMessage(Wavepoint.prefix + ChatColor.RED + "That waypoint does not exist!");
             } else {
                 WvWaypoints.delete(wp);
-                player.sendMessage("Waypoint deleted.");
+                player.sendMessage(Wavepoint.prefix + "Waypoint deleted.");
             }
         }
-
-        /*
- else if (args[0].equalsIgnoreCase("set")) {
-            commandSender.sendMessage("TODO: add set functionality");
-        } else if (args[0].equalsIgnoreCase("teleport")) {
-            commandSender.sendMessage("TODO: add teleport functionality");
+        if (args[0].equalsIgnoreCase("info")) {
+            Waypoint wp = WvWaypoints.getWaypoint(player.getUniqueId(), args[1]);
+            if (wp == null) {
+                player.sendMessage(Wavepoint.prefix + ChatColor.RED + "That waypoint does not exist!");
+            } else {
+                new WvInfo().showInfo(player, wp);
+            }
         }
-        */
         return true;
     }
 

@@ -6,12 +6,15 @@ import net.solarcosmic.wavepoint.Wavepoint;
 import net.solarcosmic.wavepoint.integrations.WvInCombatLogX;
 import net.solarcosmic.wavepoint.integrations.WvInVault;
 import net.solarcosmic.wavepoint.objects.Waypoint;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.UUID;
 
 public class WvTeleport {
@@ -28,7 +31,7 @@ public class WvTeleport {
             public void run() {
                 if (Wavepoint.hasCombatLogXIntegration) {
                     if (WvInCombatLogX.isInCombat(player)) {
-                        if (!plugin.getConfig().getBoolean("integrations.combatlogx.combat.teleport")) {
+                        if (!plugin.getConfig().getBoolean("integrations.combatlogx.combat.teleport", true)) {
                             player.sendMessage(ChatColor.RED + "You are currently in combat! Teleport cancelled.");
                             this.cancel();
                             return;
@@ -47,34 +50,48 @@ public class WvTeleport {
                     }
                 }
                 if (count == 1) {
+                    if (Wavepoint.isSoundOn) player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_HAT, 1.0f, 1.0f);
+                    if (Wavepoint.isSoundOn) player.playSound(player.getLocation(), Sound.BLOCK_WOODEN_BUTTON_CLICK_ON, 1.0f, 1.0f);
                     player.sendActionBar("Please wait 1 more second!");
                 } else {
+                    if (Wavepoint.isSoundOn) player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_HAT, 1.0f, 1.0f);
                     player.sendActionBar("Please wait " + count + " more seconds!");
                 }
                 if (count < 1) {
                     if (Wavepoint.hasVaultIntegration) {
                         Economy economy = WvInVault.getEconomy();
-                        double charge_amount = plugin.getConfig().getDouble("integrations.vault.charge_amount");
+                        double charge_amount = plugin.getConfig().getDouble("integrations.vault.charge_amount", 5.0);
                         EconomyResponse response = economy.withdrawPlayer(player, charge_amount);
                         if (response.transactionSuccess()) {
+                            if (Wavepoint.isSoundOn) player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 1.0f, 1.0f);
+                            if (Wavepoint.isSoundOn) player.playSound(player.getLocation(), Sound.BLOCK_WOODEN_BUTTON_CLICK_ON, 1.0f, 1.0f);
                             player.sendActionBar("Teleported! -$" + response.amount + " has been taken from your account.");
-                            player.teleport(waypoint.getLocation());
-                            WvTeleport.setCurrentlyTeleporting(player.getUniqueId(), false);
+                            teleportPhase(player, waypoint);
                             this.cancel();
                         } else {
-                            player.sendMessage(ChatColor.RED + "Transaction failed - you have not been teleported and your account has not been charged: " + response.errorMessage);
+                            player.sendMessage(Wavepoint.prefix + ChatColor.RED + WvLanguage.lang("wavepoint.integrations.vault.transaction_failed") + response.errorMessage);
                             this.cancel();
                         }
                     } else {
                         player.sendActionBar("Teleported!");
-                        player.teleport(waypoint.getLocation());
-                        WvTeleport.setCurrentlyTeleporting(player.getUniqueId(), false);
+                        teleportPhase(player, waypoint);
                         this.cancel();
                     }
                 }
                 count -= 1;
             }
         }.runTaskTimer(Wavepoint.getInstance(), 0L, 20L);
+    }
+
+    private static void teleportPhase(Player player, Waypoint waypoint) {
+        player.teleport(waypoint.getLocation());
+        WvTeleport.setCurrentlyTeleporting(player.getUniqueId(), false);
+        try {
+            for (String item : plugin.getConfig().getStringList("commands.teleport")) {
+                // index 0 out of bounds for length 0?
+                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), WvPlaceholders.doPlaceholder(item, player));
+            }
+        } catch (Exception ignored) {}
     }
 
     public static boolean isCurrentlyTeleporting(UUID uuid) {
@@ -84,5 +101,13 @@ public class WvTeleport {
     public static void setCurrentlyTeleporting(UUID uuid, boolean decision) {
         if (decision) { currentlyTeleporting.add(uuid); }
         else { currentlyTeleporting.remove(uuid); }
+    }
+
+    private static void sendTeleportMessage(Player player, String message) {
+        if (Objects.equals(plugin.getConfig().getString("teleport.action_type", "action"), "action")) {
+            player.sendActionBar(ChatColor.translateAlternateColorCodes('&', message));
+        } else if (Objects.equals(plugin.getConfig().getString("teleport.action_type", "action"), "message")) {
+            player.sendMessage(Wavepoint.prefix + ChatColor.translateAlternateColorCodes('&', message));
+        }
     }
 }

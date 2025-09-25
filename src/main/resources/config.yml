@@ -1,8 +1,18 @@
+#
+# Wavepoint
+# 2025 (c) solarcosmic
+#
+
+# The language file Wavepoint should run from (in languages folder).
+language: "en_us"
+
 # Whether Wavepoint should listen to waypoint requests.
 enable: true
 
 # Whether Wavepoint should be in debug mode - showing extra logs.
 debug: true
+
+prefix: "&bWavepoint »&r "
 
 # Below are integrations that work with other plugins.
 # If the integration is enabled, but the plugin or requirements aren't met, nothing will happen.
@@ -18,4 +28,11 @@ integrations:
 
 # Allows the server to execute a command on a specific event. Use ${player} to reference the player.
 commands:
-  teleport: ""              # For example: kick ${player} No teleporting!
+  teleport:
+    - ""                # For example: kick ${player} No teleporting!
+
+teleport:
+  action_type: "action" # Either "action" for actionbar, or "message" for message - defaults to action
+
+experiments:
+  sounds: true          # Enables sounds for Wavepoint.

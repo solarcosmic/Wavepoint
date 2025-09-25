@@ -6,7 +6,6 @@ import net.solarcosmic.wavepoint.integrations.WvInCombatLogX;
 import net.solarcosmic.wavepoint.objects.Waypoint;
 import net.solarcosmic.wavepoint.util.BetterLogger;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -28,14 +27,14 @@ public class WvWaypoints {
         if (Wavepoint.hasCombatLogXIntegration) {
             if (WvInCombatLogX.isInCombat(player)) {
                 if (!plugin.getConfig().getBoolean("integrations.combatlogx.combat.set")) {
-                    player.sendMessage(ChatColor.RED + "You are currently in combat and cannot set a waypoint.");
+                    player.sendMessage(WvLanguage.lang("wavepoint.integrations.combatlogx.cannot_set_waypoint"));
                     return null;
                 }
             }
         }
         Map<String, Waypoint> playerMap = waypoints.computeIfAbsent(player.getUniqueId(), k -> new HashMap<>());
         playerMap.put(newSet, waypoint);
-        player.sendMessage("Waypoint created named '" + newSet + "' at: " + loc.x() + ", " + loc.y() + ", " + loc.z());
+        player.sendMessage(Wavepoint.prefix + "Waypoint created named '" + newSet + "' at: " + Math.floor(loc.x()) + ", " + Math.floor(loc.y()) + ", " + Math.floor(loc.z()));
         return waypoint;
     }
 
@@ -75,11 +74,9 @@ public class WvWaypoints {
     public static void loadAll() {
         if (section != null && !section.getKeys(false).isEmpty()) {
             for (String uid : section.getKeys(false)) {
-                logger.log("Player id: " + uid);
                 ConfigurationSection newSection = section.getConfigurationSection(uid);
                 assert newSection != null;
                 for (String wp : newSection.getKeys(false)) {
-                    logger.log("uid: " + uid + " | item: " + wp);
                     ConfigurationSection wpSection = newSection.getConfigurationSection(wp);
                     assert wpSection != null;
                     String world = wpSection.getString("world");

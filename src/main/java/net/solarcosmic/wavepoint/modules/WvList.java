@@ -1,30 +1,30 @@
 package net.solarcosmic.wavepoint.modules;
 
-import net.solarcosmic.wavepoint.WvConfig;
-import net.solarcosmic.wavepoint.objects.Waypoint;
-import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.solarcosmic.wavepoint.Wavepoint;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 public class WvList {
 
     public void showList(Player player) {
-        StringBuilder waypointString = new StringBuilder("You currently own the following waypoints: ");
-        for (Map.Entry<UUID, Map<String, Waypoint>> entry : WvWaypoints.waypoints.entrySet()) {
-            Map<String, Waypoint> waypoints = entry.getValue();
-            UUID loopPlayerId = entry.getKey();
-            if (loopPlayerId.equals(player.getUniqueId())) {
-                for (Map.Entry<String, Waypoint> entry2 : waypoints.entrySet()) {
-                    waypointString.append(" ").append(entry2.getKey()).append(" ");
-                }
-                player.sendMessage(waypointString.toString());
-            }
+        StringBuilder waypointString = new StringBuilder();
+        ArrayList<String> wpList = WvWaypoints.buildList(player.getUniqueId());
+        TextComponent base = new TextComponent("\n" + Wavepoint.prefix + "Your waypoints (" + wpList.toArray().length + ")\n" + waypointString.toString());
+        for (String item : wpList) {
+            TextComponent comp = new TextComponent("  " + ChatColor.UNDERLINE + item + ChatColor.RESET);
+            comp.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wp info " + item));
+            comp.setHoverEvent(new HoverEvent(
+                    HoverEvent.Action.SHOW_TEXT,
+                    new ComponentBuilder(ChatColor.AQUA + WvLanguage.lang("wavepoint.waypoint_hover_info")).create()
+            ));
+            base.addExtra(comp);
         }
+        player.sendMessage(base);
     }
 }

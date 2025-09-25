@@ -29,10 +29,10 @@ public class WvGeneralAPI {
 
     /**
      * Deletes an already existing waypoint and inserts the deletion request into the Waypoint queue.
+     * Waypoints will be removed as soon as this function is called, but it will not be saved until the
+     * server stops and the queue is written to `waypoints.yml`.
      *
      * @param waypoint The waypoint object that you want to delete.
-     * @apiNote Waypoints will be removed as soon as this function is called, but it will not be saved until the
-     * server stops and the queue is written to `waypoints.yml`.
      */
     public void deleteWaypoint(Waypoint waypoint) {
         WvWaypoints.delete(waypoint);

@@ -1,5 +1,5 @@
 name: Wavepoint
-version: '1.0-SNAPSHOT'
+version: '1.0'
 main: net.solarcosmic.wavepoint.Wavepoint
 api-version: '1.21'
 softdepend:
@@ -7,4 +7,10 @@ softdepend:
   - CombatLogX
 commands:
   wp:
-    description: Waypoints
+    description: The main waypoint command for Wavepoint
+    usage: "Usage: /<command> [set|list|tp|delete]"
+    permission: waypoint.wp
+permissions:
+  waypoint.wp:
+    description: Allows using the /wp command
+    default: true
