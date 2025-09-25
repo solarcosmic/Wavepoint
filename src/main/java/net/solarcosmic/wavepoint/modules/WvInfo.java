@@ -9,13 +9,14 @@ import net.solarcosmic.wavepoint.objects.Waypoint;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import java.util.Date;
 
 public class WvInfo {
     public void showInfo(Player player, Waypoint waypoint) {
-        TextComponent base = new TextComponent("\n" + Wavepoint.prefix + "Info for '" + ChatColor.AQUA + waypoint.getName() + ChatColor.RESET + "'\n");
+        TextComponent base = new TextComponent(Wavepoint.prefix + "Info for '" + ChatColor.AQUA + waypoint.getName() + ChatColor.RESET + "'\n");
         TextComponent wpName = new TextComponent("Name: " + waypoint.getName() + '\n');
         TextComponent wpTime = new TextComponent("Created: " + new Date(waypoint.getTimestamp() * 1000) + '\n');
         Location loc = waypoint.getLocation();
@@ -26,11 +27,13 @@ public class WvInfo {
                 HoverEvent.Action.SHOW_TEXT,
                 new ComponentBuilder(ChatColor.AQUA + WvLanguage.lang("wavepoint.waypoint_location_hover")).create()
         ));
-        base.addExtra(new TextComponent("\n"));
+        TextComponent wpClickTP = new TextComponent(ChatColor.UNDERLINE + "Click here to teleport!");
+        wpLoc.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wp tp " + waypoint.getName()));
         base.addExtra(wpName);
         base.addExtra(wpTime);
         base.addExtra(wpLoc);
         player.sendMessage(base);
+        if (Wavepoint.isSoundOn) player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 1.0f, 1.0f);
         try {
             for (String item : Wavepoint.getInstance().getConfig().getStringList("commands.info")) {
                 // index 0 out of bounds for length 0?

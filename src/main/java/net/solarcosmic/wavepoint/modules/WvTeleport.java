@@ -52,28 +52,26 @@ public class WvTeleport {
                 if (count == 1) {
                     if (Wavepoint.isSoundOn) player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_HAT, 1.0f, 1.0f);
                     if (Wavepoint.isSoundOn) player.playSound(player.getLocation(), Sound.BLOCK_WOODEN_BUTTON_CLICK_ON, 1.0f, 1.0f);
-                    player.sendActionBar("Please wait 1 more second!");
+                    sendTeleportMessage(player, "Please wait 1 more second!");
                 } else {
                     if (Wavepoint.isSoundOn) player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_HAT, 1.0f, 1.0f);
-                    player.sendActionBar("Please wait " + count + " more seconds!");
+                    sendTeleportMessage(player, "Please wait " + count + " more seconds!");
                 }
                 if (count < 1) {
                     if (Wavepoint.hasVaultIntegration) {
                         Economy economy = WvInVault.getEconomy();
                         double charge_amount = plugin.getConfig().getDouble("integrations.vault.charge_amount", 5.0);
                         EconomyResponse response = economy.withdrawPlayer(player, charge_amount);
-                        if (response.transactionSuccess()) {
-                            if (Wavepoint.isSoundOn) player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 1.0f, 1.0f);
-                            if (Wavepoint.isSoundOn) player.playSound(player.getLocation(), Sound.BLOCK_WOODEN_BUTTON_CLICK_ON, 1.0f, 1.0f);
-                            player.sendActionBar("Teleported! -$" + response.amount + " has been taken from your account.");
+                        if (response.transactionSuccess()) { // response.amount
+                            sendTeleportMessage(player, WvLanguage.lang("wavepoint.teleport_complete").replace("${amount}", String.valueOf(response.amount)) + " " + WvLanguage.lang("wavepoint.teleport_complete_vault").replace("${amount}", String.valueOf(response.amount)));
                             teleportPhase(player, waypoint);
                             this.cancel();
                         } else {
-                            player.sendMessage(Wavepoint.prefix + ChatColor.RED + WvLanguage.lang("wavepoint.integrations.vault.transaction_failed") + response.errorMessage);
+                            sendTeleportMessage(player, Wavepoint.prefix + ChatColor.RED + WvLanguage.lang("wavepoint.integrations.vault.transaction_failed") + response.errorMessage);
                             this.cancel();
                         }
                     } else {
-                        player.sendActionBar("Teleported!");
+                        sendTeleportMessage(player, WvLanguage.lang("wavepoint.teleport_complete"));
                         teleportPhase(player, waypoint);
                         this.cancel();
                     }
@@ -86,6 +84,11 @@ public class WvTeleport {
     private static void teleportPhase(Player player, Waypoint waypoint) {
         player.teleport(waypoint.getLocation());
         WvTeleport.setCurrentlyTeleporting(player.getUniqueId(), false);
+        if (Wavepoint.isSoundOn) {
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 1.0f, 1.0f);
+            player.playSound(player.getLocation(), Sound.BLOCK_WOODEN_BUTTON_CLICK_ON, 1.0f, 1.0f);
+            player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
+        }
         try {
             for (String item : plugin.getConfig().getStringList("commands.teleport")) {
                 // index 0 out of bounds for length 0?

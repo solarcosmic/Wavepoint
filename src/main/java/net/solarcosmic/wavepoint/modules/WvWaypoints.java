@@ -7,6 +7,7 @@ import net.solarcosmic.wavepoint.objects.Waypoint;
 import net.solarcosmic.wavepoint.util.BetterLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -41,6 +42,7 @@ public class WvWaypoints {
                 Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), WvPlaceholders.doPlaceholder(item, player));
             }
         } catch (Exception ignored) {}
+        if (Wavepoint.isSoundOn) player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 1.0f, 1.0f);
         return waypoint;
     }
 
@@ -49,11 +51,13 @@ public class WvWaypoints {
         if (playerMap != null) {
             playerMap.entrySet().removeIf(entry -> entry.getKey().equalsIgnoreCase(waypoint.getName()));
             try {
+                Player player = Bukkit.getPlayer(waypoint.getPlayerId());
+                assert player != null;
                 for (String item : plugin.getConfig().getStringList("commands.delete")) {
                     // index 0 out of bounds for length 0?
-                    assert Bukkit.getPlayer(waypoint.getPlayerId()) != null;
-                    Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), WvPlaceholders.doPlaceholder(item, Bukkit.getPlayer(waypoint.getPlayerId())));
+                    Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), WvPlaceholders.doPlaceholder(item, player));
                 }
+                if (Wavepoint.isSoundOn) player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0f, 1.0f);
             } catch (Exception ignored) {}
         }
     }

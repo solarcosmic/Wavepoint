@@ -38,13 +38,13 @@ public final class Wavepoint extends JavaPlugin implements Listener {
         if (!getDataFolder().exists()) getDataFolder().mkdirs();
         saveResource("languages/en_us.yml", false);
         getConfig().options().copyDefaults();
-        saveDefaultConfig();
         try {
             ConfigUpdater.update(this, "config.yml", new File(getDataFolder(), "config.yml"));
             logger.debug("Updated latest configuration");
         } catch (IOException e) {
             e.printStackTrace();
         }
+        saveDefaultConfig();
         new WvLanguage(getConfig().getString("language", "en_us"));
         prefix = ChatColor.translateAlternateColorCodes('&', getConfig().getString("prefix"));
         WvConfig.create();
