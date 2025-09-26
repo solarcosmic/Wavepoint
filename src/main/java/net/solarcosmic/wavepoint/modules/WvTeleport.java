@@ -23,6 +23,8 @@ public class WvTeleport {
     private static final Wavepoint plugin = Wavepoint.getInstance();
     public static final HashMap<UUID, Long> tpCooldowns = new HashMap<>();
     private static final long teleportCooldown = plugin.getConfig().getLong("teleport_cooldown", 10) * 1000L;
+    public static final HashMap<UUID, Long> recentlyTeleported = new HashMap<>();
+    public static final long tpIgnoreDuration = 1000;
 
     /*
     Teleports a player to a waypoint because why not?
@@ -103,12 +105,14 @@ public class WvTeleport {
                 }
                 count -= 1;
                 WvTeleport.setCurrentlyTeleporting(player.getUniqueId(), true);
+                System.out.println("stopping any time soon maybe?");
             }
         }.runTaskTimer(Wavepoint.getInstance(), 0L, 20L);
     }
 
     private static void teleportPhase(Player player, Waypoint waypoint) {
         player.teleport(waypoint.getLocation());
+        setAsRecentlyTeleported(player.getUniqueId());
         WvTeleport.setCurrentlyTeleporting(player.getUniqueId(), false);
         tpCooldowns.put(player.getUniqueId(), System.currentTimeMillis());
         if (Wavepoint.isSoundOn) {
@@ -127,6 +131,18 @@ public class WvTeleport {
 
     public static boolean isCurrentlyTeleporting(UUID uuid) {
         return currentlyTeleporting.contains(uuid);
+    }
+
+    public static void setAsRecentlyTeleported(UUID uuid) {
+        recentlyTeleported.put(uuid, System.currentTimeMillis());
+    }
+
+    public static boolean hasRecentlyTeleported(UUID uuid) {
+        Long t = recentlyTeleported.get(uuid);
+        if (t == null) return false;
+        if (System.currentTimeMillis() - t < tpIgnoreDuration) return true;
+        recentlyTeleported.remove(uuid);
+        return false;
     }
 
     public static void setCurrentlyTeleporting(UUID uuid, boolean decision) {
