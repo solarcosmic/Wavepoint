@@ -81,6 +81,10 @@ public final class Wavepoint extends JavaPlugin implements Listener {
     public void onPlayerMove(PlayerMoveEvent e) { // https://bukkit.org/threads/checking-if-player-moved-entire-block.238567/#post-2292237
         System.out.println("Player move");
         UUID uuid = e.getPlayer().getUniqueId();
+        if (WvTeleport.ignoreNextMove.contains(uuid)) {
+            WvTeleport.ignoreNextMove.remove(uuid);
+            return;
+        }
         if (!WvTeleport.isCurrentlyTeleporting(uuid) || WvTeleport.hasRecentlyTeleported(uuid)) return;
         System.out.println("Is currently teleporting? " + WvTeleport.isCurrentlyTeleporting(uuid));
         if (e.getFrom().getBlockX() != e.getTo().getBlockX() || e.getFrom().getBlockY() != e.getTo().getBlockY() || e.getFrom().getBlockZ() != e.getTo().getBlockZ()) {

@@ -13,10 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 public class WvTeleport {
     public static ArrayList<UUID> currentlyTeleporting = new ArrayList<>();
@@ -25,6 +22,7 @@ public class WvTeleport {
     private static final long teleportCooldown = plugin.getConfig().getLong("teleport_cooldown", 10) * 1000L;
     public static final HashMap<UUID, Long> recentlyTeleported = new HashMap<>();
     public static final long tpIgnoreDuration = 1000;
+    public static final Set<UUID> ignoreNextMove = new HashSet<>();
 
     /*
     Teleports a player to a waypoint because why not?
@@ -112,6 +110,7 @@ public class WvTeleport {
 
     private static void teleportPhase(Player player, Waypoint waypoint) {
         player.teleport(waypoint.getLocation());
+        ignoreNextMove.add(player.getUniqueId());
         setAsRecentlyTeleported(player.getUniqueId());
         WvTeleport.setCurrentlyTeleporting(player.getUniqueId(), false);
         tpCooldowns.put(player.getUniqueId(), System.currentTimeMillis());
