@@ -35,7 +35,7 @@ public class WvWaypoints {
         }
         Map<String, Waypoint> playerMap = waypoints.computeIfAbsent(player.getUniqueId(), k -> new HashMap<>());
         playerMap.put(newSet, waypoint);
-        player.sendMessage(Wavepoint.prefix + "Waypoint created named '" + newSet + "' at: " + Math.floor(loc.x()) + ", " + Math.floor(loc.y()) + ", " + Math.floor(loc.z()));
+        player.sendMessage(Wavepoint.prefix + "Waypoint created named '" + newSet + "' at: " + Math.floor(loc.getX()) + ", " + Math.floor(loc.getY()) + ", " + Math.floor(loc.getZ()));
         try {
             for (String item : plugin.getConfig().getStringList("commands.set")) {
                 // index 0 out of bounds for length 0?
@@ -71,9 +71,9 @@ public class WvWaypoints {
                 Location loc = waypoint.getLocation();
                 config.set(base + ".timestamp", waypoint.getTimestamp());
                 config.set(base + ".world", loc.getWorld().getName());
-                config.set(base + ".x", loc.x());
-                config.set(base + ".y", loc.y());
-                config.set(base + ".z", loc.z());
+                config.set(base + ".x", loc.getX());
+                config.set(base + ".y", loc.getY());
+                config.set(base + ".z", loc.getZ());
                 config.set(base + ".pitch", loc.getPitch());
                 config.set(base + ".yaw", loc.getYaw());
                 logger.debug("Waypoint config set: " + waypoint.getName());

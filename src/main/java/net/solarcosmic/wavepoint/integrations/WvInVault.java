@@ -1,7 +1,12 @@
 package net.solarcosmic.wavepoint.integrations;
 
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.milkbowl.vault.economy.Economy;
 import net.solarcosmic.wavepoint.Wavepoint;
+import net.solarcosmic.wavepoint.modules.WvLanguage;
+import net.solarcosmic.wavepoint.modules.WvTeleport;
 import net.solarcosmic.wavepoint.util.BetterLogger;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -43,7 +48,7 @@ public class WvInVault {
     public static boolean hasRequiredCurrency(Player player) {
         double charge_amount = plugin.getConfig().getDouble("integrations.vault.charge_amount");
         if (WvInVault.getEconomy().getBalance(player) < charge_amount) {
-            player.sendActionBar("You do not have enough money to teleport! A minimum of $" + charge_amount + " is required.");
+            WvTeleport.sendTeleportMessage(player, WvLanguage.lang("wavepoint.not_enough_money").replace("${amount}", String.valueOf(charge_amount)));
             return false;
         }
         return true;

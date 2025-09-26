@@ -1,6 +1,8 @@
 package net.solarcosmic.wavepoint;
 
 import com.tchristofferson.configupdater.ConfigUpdater;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.solarcosmic.wavepoint.commands.WaypointCommand;
 import net.solarcosmic.wavepoint.integrations.WvInCombatLogX;
 import net.solarcosmic.wavepoint.integrations.WvInVault;
@@ -38,13 +40,14 @@ public final class Wavepoint extends JavaPlugin implements Listener {
         if (!getDataFolder().exists()) getDataFolder().mkdirs();
         saveResource("languages/en_us.yml", false);
         getConfig().options().copyDefaults();
+        saveDefaultConfig();
         try {
             ConfigUpdater.update(this, "config.yml", new File(getDataFolder(), "config.yml"));
+            ConfigUpdater.update(this, "languages/en_us.yml", new File(getDataFolder(), "languages/en_us.yml"));
             logger.debug("Updated latest configuration");
         } catch (IOException e) {
             e.printStackTrace();
         }
-        saveDefaultConfig();
         new WvLanguage(getConfig().getString("language", "en_us"));
         prefix = ChatColor.translateAlternateColorCodes('&', getConfig().getString("prefix"));
         WvConfig.create();
@@ -82,7 +85,7 @@ public final class Wavepoint extends JavaPlugin implements Listener {
             if (Objects.equals(getConfig().getString("teleport.action_type", "action"), "message")) {
                 e.getPlayer().sendMessage(Wavepoint.prefix + ChatColor.translateAlternateColorCodes('&', WvLanguage.lang("wavepoint.waypoint_moved")));
             } else {
-                e.getPlayer().sendActionBar(ChatColor.translateAlternateColorCodes('&', WvLanguage.lang("wavepoint.waypoint_moved")));
+                WvTeleport.sendTeleportMessage(e.getPlayer(), WvLanguage.lang("wavepoint.waypoint_moved"));
             }
         }
     }

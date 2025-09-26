@@ -1,5 +1,7 @@
 package net.solarcosmic.wavepoint.modules;
 
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import net.solarcosmic.wavepoint.Wavepoint;
@@ -25,10 +27,13 @@ public class WvTeleport {
     Teleports a player to a waypoint because why not?
      */
     public static void teleport(Player player, Waypoint waypoint) {
-        WvTeleport.setCurrentlyTeleporting(player.getUniqueId(), true);
         BukkitTask task = new BukkitRunnable() {
             int count = 5;
             public void run() {
+                if (WvTeleport.isCurrentlyTeleporting(player.getUniqueId())) {
+                    this.cancel();
+                    return;
+                }
                 if (Wavepoint.hasCombatLogXIntegration) {
                     if (WvInCombatLogX.isInCombat(player)) {
                         if (!plugin.getConfig().getBoolean("integrations.combatlogx.combat.teleport", true)) {
@@ -77,6 +82,7 @@ public class WvTeleport {
                     }
                 }
                 count -= 1;
+                WvTeleport.setCurrentlyTeleporting(player.getUniqueId(), true);
             }
         }.runTaskTimer(Wavepoint.getInstance(), 0L, 20L);
     }
@@ -106,11 +112,12 @@ public class WvTeleport {
         else { currentlyTeleporting.remove(uuid); }
     }
 
-    private static void sendTeleportMessage(Player player, String message) {
+    public static void sendTeleportMessage(Player player, String message) {
+        String newMessage = WvPlaceholders.doPlaceholder(message, player);
         if (Objects.equals(plugin.getConfig().getString("teleport.action_type", "action"), "action")) {
-            player.sendActionBar(ChatColor.translateAlternateColorCodes('&', message));
+            player.sendActionBar(ChatColor.translateAlternateColorCodes('&', newMessage));
         } else if (Objects.equals(plugin.getConfig().getString("teleport.action_type", "action"), "message")) {
-            player.sendMessage(Wavepoint.prefix + ChatColor.translateAlternateColorCodes('&', message));
+            player.sendMessage(Wavepoint.prefix + ChatColor.translateAlternateColorCodes('&', newMessage));
         }
     }
 }

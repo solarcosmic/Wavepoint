@@ -8,13 +8,17 @@ wavepoint:
   waypoint_no_exist: "This waypoint does not exist!"
   waypoint_hover_info: "Click to view info about this waypoint!"
   waypoint_location_hover: "Click to copy to clipboard!"
-  waypoint_moved: "You moved!"
-  teleport_complete: "Teleported!"
+  waypoint_click_teleport: "Click here to teleport!"
+  waypoint_moved: "&cYou moved!"
+  teleport_complete: "&aTeleported!"
+  your_waypoints: "Your waypoints"
+  no_waypoints: "&cYou currently have no waypoints."
 
 integrations:
   vault:
     transaction_failed: "&cTransaction failed - you have not been teleported and your account has not been charged: "
     teleport_complete_vault: "-$${amount} has been taken from your account."
+    not_enough_money: "&cYou do not have enough money to teleport! A minimum of $${amount} is required."
   combatlogx:
     in_combat: "&cYou are currently in combat! Teleport cancelled."
     cannot_set_waypoint: "&cYou are currently in combat and cannot set a waypoint."
