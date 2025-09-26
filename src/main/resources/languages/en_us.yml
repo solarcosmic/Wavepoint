@@ -13,10 +13,13 @@ wavepoint:
   teleport_complete: "&aTeleported!"
   your_waypoints: "Your waypoints"
   no_waypoints: "&cYou currently have no waypoints."
+  teleport_cooldown: "&cYou must wait ${cooldown} seconds before teleporting again!"
+  wait_teleport_single: "Please wait 1 more second!"
+  wait_teleport_plural: "Please wait ${seconds} more seconds!"
 
 integrations:
   vault:
-    transaction_failed: "&cTransaction failed - you have not been teleported and your account has not been charged: "
+    transaction_failed: "&cTransaction failed: "
     teleport_complete_vault: "-$${amount} has been taken from your account."
     not_enough_money: "&cYou do not have enough money to teleport! A minimum of $${amount} is required."
   combatlogx:

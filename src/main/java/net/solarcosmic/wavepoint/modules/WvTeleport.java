@@ -1,7 +1,5 @@
 package net.solarcosmic.wavepoint.modules;
 
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import net.solarcosmic.wavepoint.Wavepoint;
@@ -16,28 +14,37 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.UUID;
 
 public class WvTeleport {
     public static ArrayList<UUID> currentlyTeleporting = new ArrayList<>();
-    private static Wavepoint plugin = Wavepoint.getInstance();
+    private static final Wavepoint plugin = Wavepoint.getInstance();
+    public static final HashMap<UUID, Long> tpCooldowns = new HashMap<>();
+    private static final long teleportCooldown = plugin.getConfig().getLong("teleport_cooldown", 10) * 1000L;
 
     /*
     Teleports a player to a waypoint because why not?
      */
     public static void teleport(Player player, Waypoint waypoint) {
+        UUID uuid = player.getUniqueId();
+        long now = System.currentTimeMillis();
+        if (tpCooldowns.containsKey(uuid)) {
+            long lastTP = tpCooldowns.get(uuid);
+            long timeLeft = lastTP + teleportCooldown - now;
+            if (timeLeft > 0) {
+                sendTeleportMessage(player, WvLanguage.lang("wavepoint.teleport_cooldown").replace("${cooldown}", String.valueOf(timeLeft / 1000)));
+                return;
+            }
+        }
         BukkitTask task = new BukkitRunnable() {
             int count = 5;
             public void run() {
-                if (WvTeleport.isCurrentlyTeleporting(player.getUniqueId())) {
-                    this.cancel();
-                    return;
-                }
                 if (Wavepoint.hasCombatLogXIntegration) {
                     if (WvInCombatLogX.isInCombat(player)) {
                         if (!plugin.getConfig().getBoolean("integrations.combatlogx.combat.teleport", true)) {
-                            player.sendMessage(ChatColor.RED + "You are currently in combat! Teleport cancelled.");
+                            player.sendMessage(WvLanguage.lang("integrations.combatlogx.in_combat"));
                             this.cancel();
                             return;
                         }
@@ -57,10 +64,10 @@ public class WvTeleport {
                 if (count == 1) {
                     if (Wavepoint.isSoundOn) player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_HAT, 1.0f, 1.0f);
                     if (Wavepoint.isSoundOn) player.playSound(player.getLocation(), Sound.BLOCK_WOODEN_BUTTON_CLICK_ON, 1.0f, 1.0f);
-                    sendTeleportMessage(player, "Please wait 1 more second!");
+                    sendTeleportMessage(player, WvLanguage.lang("wavepoint.wait_teleport_single"));
                 } else {
                     if (Wavepoint.isSoundOn) player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_HAT, 1.0f, 1.0f);
-                    sendTeleportMessage(player, "Please wait " + count + " more seconds!");
+                    sendTeleportMessage(player, WvLanguage.lang("wavepoint.wait_teleport_plural").replace("${seconds}", String.valueOf(count)));
                 }
                 if (count < 1) {
                     if (Wavepoint.hasVaultIntegration) {
@@ -72,7 +79,7 @@ public class WvTeleport {
                             teleportPhase(player, waypoint);
                             this.cancel();
                         } else {
-                            sendTeleportMessage(player, Wavepoint.prefix + ChatColor.RED + WvLanguage.lang("wavepoint.integrations.vault.transaction_failed") + response.errorMessage);
+                            sendTeleportMessage(player, Wavepoint.prefix + WvLanguage.lang("wavepoint.integrations.vault.transaction_failed") + response.errorMessage);
                             this.cancel();
                         }
                     } else {
@@ -90,6 +97,7 @@ public class WvTeleport {
     private static void teleportPhase(Player player, Waypoint waypoint) {
         player.teleport(waypoint.getLocation());
         WvTeleport.setCurrentlyTeleporting(player.getUniqueId(), false);
+        tpCooldowns.put(player.getUniqueId(), System.currentTimeMillis());
         if (Wavepoint.isSoundOn) {
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 1.0f, 1.0f);
             player.playSound(player.getLocation(), Sound.BLOCK_WOODEN_BUTTON_CLICK_ON, 1.0f, 1.0f);

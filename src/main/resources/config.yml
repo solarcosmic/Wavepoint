@@ -9,7 +9,11 @@ language: "en_us"
 # Whether Wavepoint should be in debug mode - showing extra logs.
 debug: true
 
+# The chat prefix, which is prepended to most Wavepoint messages.
 prefix: "&bWavepoint »&r "
+
+# How long of a cooldown to wait until the user can teleport again.
+teleport_cooldown: 10
 
 # Below are integrations that work with other plugins.
 # If the integration is enabled, but the plugin or requirements aren't met, nothing will happen.
