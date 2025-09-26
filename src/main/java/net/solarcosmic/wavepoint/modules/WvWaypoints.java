@@ -23,8 +23,8 @@ public class WvWaypoints {
     private static Wavepoint plugin = Wavepoint.getInstance();
 
     public static Waypoint create(Player player, Location loc, String name) {
-        if (!player.hasPermission("waypoint.wp.create")) {
-            player.sendMessage("&cYou do not have permission to execute this!");
+        if (!player.hasPermission("waypoint.wp.set")) {
+            player.sendMessage(WvLanguage.lang("wavepoint.no_permission"));
             return null;
         }
         int wpAmount = new WvGeneralAPI().getWaypointAmount(player.getUniqueId());
@@ -36,7 +36,7 @@ public class WvWaypoints {
         // maybe do something like strip /wp list then do new set?
         int limit = plugin.getConfig().getInt("max_characters", 10);
         String newSet = name.toLowerCase().replaceAll(" ", "_");
-        if (name.length() > limit) {
+        if (Integer.signum(limit) == 1 && newSet.length() > limit) { // if positive and over char limit
             newSet = newSet.substring(0, limit);
             player.sendMessage(Wavepoint.prefix + WvLanguage.lang("wavepoint.max_characters_limit").replace("${limit}", String.valueOf(limit)));
         }
@@ -66,7 +66,7 @@ public class WvWaypoints {
         Player player = Bukkit.getPlayer(waypoint.getPlayerId());
         assert player != null;
         if (!player.hasPermission("waypoint.wp.delete")) {
-            player.sendMessage("&cYou do not have permission to execute this!");
+            player.sendMessage(WvLanguage.lang("wavepoint.no_permission"));
             return;
         }
         Map<String, Waypoint> playerMap = waypoints.get(waypoint.getPlayerId());

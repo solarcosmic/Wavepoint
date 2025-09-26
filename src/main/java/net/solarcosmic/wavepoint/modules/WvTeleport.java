@@ -29,7 +29,7 @@ public class WvTeleport {
      */
     public static void teleport(Player player, Waypoint waypoint) {
         if (!player.hasPermission("waypoint.wp.tp")) {
-            player.sendMessage("&cYou do not have permission to execute this!");
+            player.sendMessage(WvLanguage.lang("wavepoint.no_permission"));
             return;
         }
         if (WvTeleport.isCurrentlyTeleporting(player.getUniqueId())) {
@@ -42,6 +42,7 @@ public class WvTeleport {
             long timeLeft = lastTP + teleportCooldown - now;
             if (timeLeft > 0) {
                 sendTeleportMessage(player, WvLanguage.lang("wavepoint.teleport_cooldown").replace("${cooldown}", String.valueOf(timeLeft / 1000)));
+                if (Wavepoint.isSoundOn) player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0f, 1.0f);
                 return;
             }
         }
@@ -49,14 +50,16 @@ public class WvTeleport {
             if (WvInCombatLogX.isInCombat(player)) {
                 if (!plugin.getConfig().getBoolean("integrations.combatlogx.combat.teleport", true)) {
                     player.sendMessage(WvLanguage.lang("integrations.combatlogx.in_combat"));
+                    if (Wavepoint.isSoundOn) player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0f, 1.0f);
                     return;
                 }
             }
         }
         if (Wavepoint.hasVaultIntegration) {
             if (!WvInVault.hasRequiredCurrency(player)) {
-                WvTeleport.sendTeleportMessage(player, WvLanguage.lang("wavepoint.not_enough_money").replace("${amount}", String.valueOf(plugin.getConfig().getDouble("integrations.vault.charge_amount"))));
+                WvTeleport.sendTeleportMessage(player, WvLanguage.lang("integrations.vault.not_enough_money").replace("${amount}", String.valueOf(plugin.getConfig().getDouble("integrations.vault.charge_amount"))));
                 WvTeleport.setCurrentlyTeleporting(player.getUniqueId(), false);
+                if (Wavepoint.isSoundOn) player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0f, 1.0f);
                 return;
             }
         }
@@ -73,6 +76,7 @@ public class WvTeleport {
                         if (!plugin.getConfig().getBoolean("integrations.combatlogx.combat.teleport", true)) {
                             player.sendMessage(WvLanguage.lang("integrations.combatlogx.in_combat"));
                             WvTeleport.setCurrentlyTeleporting(player.getUniqueId(), false);
+                            if (Wavepoint.isSoundOn) player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0f, 1.0f);
                             this.cancel();
                             return;
                         }
@@ -80,8 +84,9 @@ public class WvTeleport {
                 }
                 if (Wavepoint.hasVaultIntegration) {
                     if (!WvInVault.hasRequiredCurrency(player)) {
-                        WvTeleport.sendTeleportMessage(player, WvLanguage.lang("wavepoint.not_enough_money").replace("${amount}", String.valueOf(plugin.getConfig().getDouble("integrations.vault.charge_amount"))));
+                        WvTeleport.sendTeleportMessage(player, WvLanguage.lang("integrations.vault.not_enough_money").replace("${amount}", String.valueOf(plugin.getConfig().getDouble("integrations.vault.charge_amount"))));
                         WvTeleport.setCurrentlyTeleporting(player.getUniqueId(), false);
+                        if (Wavepoint.isSoundOn) player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0f, 1.0f);
                         this.cancel();
                         return;
                     }

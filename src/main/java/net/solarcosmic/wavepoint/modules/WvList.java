@@ -17,7 +17,7 @@ public class WvList {
 
     public void showList(Player player) {
         if (!player.hasPermission("waypoint.wp.list")) {
-            player.sendMessage("&cYou do not have permission to execute this!");
+            player.sendMessage(WvLanguage.lang("wavepoint.no_permission"));
             return;
         }
         StringBuilder waypointString = new StringBuilder();

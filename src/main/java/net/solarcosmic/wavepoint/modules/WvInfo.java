@@ -17,7 +17,7 @@ import java.util.Date;
 public class WvInfo {
     public void showInfo(Player player, Waypoint waypoint) {
         if (!player.hasPermission("waypoint.wp.info")) {
-            player.sendMessage("&cYou do not have permission to execute this!");
+            player.sendMessage(WvLanguage.lang("wavepoint.no_permission"));
             return;
         }
         TextComponent base = new TextComponent(Wavepoint.prefix + "Info for '" + ChatColor.AQUA + waypoint.getName() + ChatColor.RESET + "'\n");

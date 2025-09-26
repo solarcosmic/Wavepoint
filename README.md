@@ -1,10 +1,15 @@
 ![Wavepoint Logo Fade](https://cdn.modrinth.com/data/cached_images/a32cb79fecb055949174f3ef30896c2e079060c0_0.webp)
 <center><h1>Wavepoint</h1>
 Wavepoint is a new, simplistic waypoint plugin designed to make playing Minecraft easier. <br><br>
-<img alt="ghpages" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/documentation/ghpages_vector.svg">
+<a href="https://github.com/solarcosmic/Wavepoint" target="_blank">
   <img alt="github" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/github_vector.svg">
-<img alt="paper" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/supported/paper_vector.svg">
-<img alt="paper" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/supported/purpur_vector.svg">
+</a>
+<a href="https://papermc.io" target="_blank">
+  <img alt="paper" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/supported/paper_vector.svg">
+</a>
+<a href="https://purpurmc.org" target="_blank">
+  <img alt="purpur" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/supported/purpur_vector.svg">
+</a>
 <br><br>
 
 ![/wp set sand](https://cdn.modrinth.com/data/cached_images/c03e0e30aa7740d46fb89d465e0a6910a95f3d2d_0.webp)

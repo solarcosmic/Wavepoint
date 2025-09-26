@@ -21,6 +21,7 @@ wavepoint:
   max_characters_limit: "&eThis waypoint has reached the maximum character limit of ${limit} and has been truncated."
   max_waypoints_limit: "&cYou have reached the maximum number of waypoints (${limit}). Please delete a waypoint to make another one."
   command_usage: "Usage: /wp <set/tp/delete/list/info> <name>"
+  no_permission: "&cYou do not have permission to execute this!"
 
 integrations:
   vault:
