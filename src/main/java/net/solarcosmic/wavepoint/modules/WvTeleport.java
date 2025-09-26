@@ -46,6 +46,10 @@ public class WvTeleport {
         BukkitTask task = new BukkitRunnable() {
             int count = 5;
             public void run() {
+                if (!WvTeleport.isCurrentlyTeleporting(player.getUniqueId())) {
+                    this.cancel();
+                    return;
+                }
                 if (Wavepoint.hasCombatLogXIntegration) {
                     if (WvInCombatLogX.isInCombat(player)) {
                         if (!plugin.getConfig().getBoolean("integrations.combatlogx.combat.teleport", true)) {
@@ -56,10 +60,6 @@ public class WvTeleport {
                     }
                 }
                 if (Wavepoint.hasVaultIntegration) {
-                    if (!WvTeleport.isCurrentlyTeleporting(player.getUniqueId())) {
-                        this.cancel();
-                        return;
-                    }
                     if (!WvInVault.hasRequiredCurrency(player)) {
                         WvTeleport.setCurrentlyTeleporting(player.getUniqueId(), false);
                         this.cancel();

@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WaypointCommand implements TabExecutor {
-    public List<String> arguments = List.of("set", "list", "tp", "delete", "info");
+    public List<String> arguments = List.of("set", "list", "tp", "delete", "info", "global");
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(commandSender instanceof Player)) {
@@ -64,6 +64,17 @@ public class WaypointCommand implements TabExecutor {
                 return false;
             }
             Waypoint wp = WvWaypoints.getWaypoint(player.getUniqueId(), args[1]);
+            if (wp == null) {
+                player.sendMessage(Wavepoint.prefix + WvLanguage.lang("wavepoint.argument_unexisting"));
+            } else {
+                new WvInfo().showInfo(player, wp);
+            }
+        } else if (args[0].equalsIgnoreCase("global")) {
+            if (args.length < 2) {
+                player.sendMessage(Wavepoint.prefix + WvLanguage.lang("wavepoint.command_usage"));
+                return false;
+            }
+            Waypoint wp = WvWaypoints.getGlobalWaypoint(args[1]);
             if (wp == null) {
                 player.sendMessage(Wavepoint.prefix + WvLanguage.lang("wavepoint.argument_unexisting"));
             } else {
