@@ -89,9 +89,9 @@ public final class Wavepoint extends JavaPlugin implements Listener {
         System.out.println("Is currently teleporting? " + WvTeleport.isCurrentlyTeleporting(uuid));
         if (e.getFrom().getBlockX() != e.getTo().getBlockX() || e.getFrom().getBlockY() != e.getTo().getBlockY() || e.getFrom().getBlockZ() != e.getTo().getBlockZ()) {
             System.out.println("Passed movement stage");
+            WvTeleport.sendTeleportMessage(e.getPlayer(), WvLanguage.lang("wavepoint.waypoint_moved"));
             WvTeleport.setCurrentlyTeleporting(uuid, false);
             System.out.println("Set is currently teleporting to false! Is currently teleporting?: " + WvTeleport.isCurrentlyTeleporting(uuid));
-            WvTeleport.sendTeleportMessage(e.getPlayer(), WvLanguage.lang("wavepoint.waypoint_moved"));
         }
     }
 
