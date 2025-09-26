@@ -30,6 +30,7 @@ public class WvTeleport {
     public static void teleport(Player player, Waypoint waypoint) {
         System.out.println(1);
         UUID uuid = player.getUniqueId();
+        WvTeleport.setCurrentlyTeleporting(uuid, true);
         long now = System.currentTimeMillis();
         if (tpCooldowns.containsKey(uuid)) {
             long lastTP = tpCooldowns.get(uuid);

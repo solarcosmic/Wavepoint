@@ -15,6 +15,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -83,11 +84,17 @@ public final class Wavepoint extends JavaPlugin implements Listener {
         if (e.getFrom().getBlockX() != e.getTo().getBlockX() || e.getFrom().getBlockY() != e.getTo().getBlockY() || e.getFrom().getBlockZ() != e.getTo().getBlockZ()) {
             WvTeleport.setCurrentlyTeleporting(uuid, false);
             if (Objects.equals(getConfig().getString("teleport.action_type", "action"), "message")) {
-                e.getPlayer().sendMessage(Wavepoint.prefix + ChatColor.translateAlternateColorCodes('&', WvLanguage.lang("wavepoint.waypoint_moved")));
+                e.getPlayer().sendMessage(Wavepoint.prefix + WvLanguage.lang("wavepoint.waypoint_moved"));
             } else {
                 WvTeleport.sendTeleportMessage(e.getPlayer(), WvLanguage.lang("wavepoint.waypoint_moved"));
             }
         }
+    }
+
+    @EventHandler
+    public void onPlayerTeleport(PlayerTeleportEvent e) {
+        UUID uuid = e.getPlayer().getUniqueId();
+        if (WvTeleport.isCurrentlyTeleporting(uuid)) WvTeleport.setCurrentlyTeleporting(uuid, false);
     }
 
     @Override
