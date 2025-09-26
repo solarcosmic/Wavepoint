@@ -102,7 +102,7 @@ public class WvTeleport {
                     }
                 }
                 count -= 1;
-                WvTeleport.setCurrentlyTeleporting(player.getUniqueId(), true);
+                //WvTeleport.setCurrentlyTeleporting(player.getUniqueId(), true);
                 System.out.println("stopping any time soon maybe?");
             }
         }.runTaskTimer(Wavepoint.getInstance(), 0L, 20L);
