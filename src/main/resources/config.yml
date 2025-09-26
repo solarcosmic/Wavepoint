@@ -7,7 +7,7 @@
 language: "en_us"
 
 # Whether Wavepoint should be in debug mode - showing extra logs.
-debug: true
+debug: false
 
 # The chat prefix, which is prepended to most Wavepoint messages.
 prefix: "&bWavepoint »&r "
@@ -21,7 +21,7 @@ max_cap: 5
 
 # Maximum amount of characters that can be used in the creation of a waypoint name.
 # Set to -1 or a negative integer for unlimited.
-max_characters: 5
+max_characters: 10
 
 # Below are integrations that work with other plugins.
 # If the integration is enabled, but the plugin or requirements aren't met, nothing will happen.

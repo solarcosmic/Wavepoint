@@ -48,7 +48,6 @@ public class WvInVault {
     public static boolean hasRequiredCurrency(Player player) {
         double charge_amount = plugin.getConfig().getDouble("integrations.vault.charge_amount");
         if (WvInVault.getEconomy().getBalance(player) < charge_amount) {
-            WvTeleport.sendTeleportMessage(player, WvLanguage.lang("wavepoint.not_enough_money").replace("${amount}", String.valueOf(charge_amount)));
             return false;
         }
         return true;

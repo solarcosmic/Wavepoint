@@ -31,7 +31,10 @@ public class WvInfo {
                 HoverEvent.Action.SHOW_TEXT,
                 new ComponentBuilder(ChatColor.AQUA + WvLanguage.lang("wavepoint.waypoint_location_hover")).create()
         ));
+        TextComponent wpWorld = new TextComponent("World: " + waypoint.getLocation().getWorld().getName() + '\n');
         TextComponent wpClickTP = new TextComponent(ChatColor.UNDERLINE + WvLanguage.lang("wavepoint.waypoint_click_teleport"));
+        TextComponent wpPitch = new TextComponent("Pitch: " + waypoint.getLocation().getPitch() + '\n');
+        TextComponent wpYaw = new TextComponent("Yaw: " + waypoint.getLocation().getYaw() + '\n');
         wpClickTP.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wp tp " + waypoint.getName()));
         wpLoc.setHoverEvent(new HoverEvent(
                 HoverEvent.Action.SHOW_TEXT,
@@ -44,6 +47,9 @@ public class WvInfo {
         base.addExtra(wpName);
         base.addExtra(wpTime);
         base.addExtra(wpLoc);
+        base.addExtra(wpWorld);
+        base.addExtra(wpPitch);
+        base.addExtra(wpYaw);
         base.addExtra(wpClickTP);
         player.spigot().sendMessage(base);
         if (Wavepoint.isSoundOn) player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 1.0f, 1.0f);

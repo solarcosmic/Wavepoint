@@ -32,8 +32,10 @@ public class WvTeleport {
             player.sendMessage("&cYou do not have permission to execute this!");
             return;
         }
+        if (WvTeleport.isCurrentlyTeleporting(player.getUniqueId())) {
+            return;
+        }
         UUID uuid = player.getUniqueId();
-        WvTeleport.setCurrentlyTeleporting(uuid, true);
         long now = System.currentTimeMillis();
         if (tpCooldowns.containsKey(uuid)) {
             long lastTP = tpCooldowns.get(uuid);
@@ -43,6 +45,22 @@ public class WvTeleport {
                 return;
             }
         }
+        if (Wavepoint.hasCombatLogXIntegration) {
+            if (WvInCombatLogX.isInCombat(player)) {
+                if (!plugin.getConfig().getBoolean("integrations.combatlogx.combat.teleport", true)) {
+                    player.sendMessage(WvLanguage.lang("integrations.combatlogx.in_combat"));
+                    return;
+                }
+            }
+        }
+        if (Wavepoint.hasVaultIntegration) {
+            if (!WvInVault.hasRequiredCurrency(player)) {
+                WvTeleport.sendTeleportMessage(player, WvLanguage.lang("wavepoint.not_enough_money").replace("${amount}", String.valueOf(plugin.getConfig().getDouble("integrations.vault.charge_amount"))));
+                WvTeleport.setCurrentlyTeleporting(player.getUniqueId(), false);
+                return;
+            }
+        }
+        WvTeleport.setCurrentlyTeleporting(uuid, true);
         BukkitTask task = new BukkitRunnable() {
             int count = 5;
             public void run() {
@@ -54,6 +72,7 @@ public class WvTeleport {
                     if (WvInCombatLogX.isInCombat(player)) {
                         if (!plugin.getConfig().getBoolean("integrations.combatlogx.combat.teleport", true)) {
                             player.sendMessage(WvLanguage.lang("integrations.combatlogx.in_combat"));
+                            WvTeleport.setCurrentlyTeleporting(player.getUniqueId(), false);
                             this.cancel();
                             return;
                         }
@@ -61,6 +80,7 @@ public class WvTeleport {
                 }
                 if (Wavepoint.hasVaultIntegration) {
                     if (!WvInVault.hasRequiredCurrency(player)) {
+                        WvTeleport.sendTeleportMessage(player, WvLanguage.lang("wavepoint.not_enough_money").replace("${amount}", String.valueOf(plugin.getConfig().getDouble("integrations.vault.charge_amount"))));
                         WvTeleport.setCurrentlyTeleporting(player.getUniqueId(), false);
                         this.cancel();
                         return;

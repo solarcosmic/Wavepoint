@@ -72,12 +72,6 @@ public final class Wavepoint extends JavaPlugin implements Listener {
         logger.log(WvLanguage.lang("wavepoint.wavepoint_ready") + " (" + (System.currentTimeMillis() - time_start) + "ms)");
     }
 
-    /*@EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        Bukkit.getLogger().info("Checking for players");
-        //new WvConfigHandler().checkAddPlayer(event.getPlayer());
-    }*/
-
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent e) { // https://bukkit.org/threads/checking-if-player-moved-entire-block.238567/#post-2292237
         UUID uuid = e.getPlayer().getUniqueId();
