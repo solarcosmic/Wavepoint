@@ -28,6 +28,7 @@ public class WvTeleport {
     Teleports a player to a waypoint because why not?
      */
     public static void teleport(Player player, Waypoint waypoint) {
+        System.out.println(1);
         UUID uuid = player.getUniqueId();
         long now = System.currentTimeMillis();
         if (tpCooldowns.containsKey(uuid)) {
@@ -35,16 +36,20 @@ public class WvTeleport {
             long timeLeft = lastTP + teleportCooldown - now;
             if (timeLeft > 0) {
                 sendTeleportMessage(player, WvLanguage.lang("wavepoint.teleport_cooldown").replace("${cooldown}", String.valueOf(timeLeft / 1000)));
+                System.out.println(2);
                 return;
             }
         }
+        System.out.println(3);
         BukkitTask task = new BukkitRunnable() {
             int count = 5;
             public void run() {
+                System.out.println(4);
                 if (Wavepoint.hasCombatLogXIntegration) {
                     if (WvInCombatLogX.isInCombat(player)) {
                         if (!plugin.getConfig().getBoolean("integrations.combatlogx.combat.teleport", true)) {
                             player.sendMessage(WvLanguage.lang("integrations.combatlogx.in_combat"));
+                            System.out.println(5);
                             this.cancel();
                             return;
                         }
@@ -53,11 +58,13 @@ public class WvTeleport {
                 if (Wavepoint.hasVaultIntegration) {
                     if (!WvTeleport.isCurrentlyTeleporting(player.getUniqueId())) {
                         this.cancel();
+                        System.out.println(6);
                         return;
                     }
                     if (!WvInVault.hasRequiredCurrency(player)) {
                         WvTeleport.setCurrentlyTeleporting(player.getUniqueId(), false);
                         this.cancel();
+                        System.out.println(7);
                         return;
                     }
                 }
@@ -65,9 +72,11 @@ public class WvTeleport {
                     if (Wavepoint.isSoundOn) player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_HAT, 1.0f, 1.0f);
                     if (Wavepoint.isSoundOn) player.playSound(player.getLocation(), Sound.BLOCK_WOODEN_BUTTON_CLICK_ON, 1.0f, 1.0f);
                     sendTeleportMessage(player, WvLanguage.lang("wavepoint.wait_teleport_single"));
+                    System.out.println(8);
                 } else {
                     if (Wavepoint.isSoundOn) player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_HAT, 1.0f, 1.0f);
                     sendTeleportMessage(player, WvLanguage.lang("wavepoint.wait_teleport_plural").replace("${seconds}", String.valueOf(count)));
+                    System.out.println(9);
                 }
                 if (count < 1) {
                     if (Wavepoint.hasVaultIntegration) {
@@ -77,14 +86,17 @@ public class WvTeleport {
                         if (response.transactionSuccess()) { // response.amount
                             sendTeleportMessage(player, WvLanguage.lang("wavepoint.teleport_complete").replace("${amount}", String.valueOf(response.amount)) + " " + WvLanguage.lang("wavepoint.teleport_complete_vault").replace("${amount}", String.valueOf(response.amount)));
                             teleportPhase(player, waypoint);
+                            System.out.println(10);
                             this.cancel();
                         } else {
                             sendTeleportMessage(player, Wavepoint.prefix + WvLanguage.lang("wavepoint.integrations.vault.transaction_failed") + response.errorMessage);
+                            System.out.println(11);
                             this.cancel();
                         }
                     } else {
                         sendTeleportMessage(player, WvLanguage.lang("wavepoint.teleport_complete"));
                         teleportPhase(player, waypoint);
+                        System.out.println(12);
                         this.cancel();
                     }
                 }
@@ -109,6 +121,7 @@ public class WvTeleport {
                 Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), WvPlaceholders.doPlaceholder(item, player));
             }
         } catch (Exception ignored) {}
+        System.out.println(13);
     }
 
     public static boolean isCurrentlyTeleporting(UUID uuid) {
@@ -127,5 +140,6 @@ public class WvTeleport {
         } else if (Objects.equals(plugin.getConfig().getString("teleport.action_type", "action"), "message")) {
             player.sendMessage(Wavepoint.prefix + ChatColor.translateAlternateColorCodes('&', newMessage));
         }
+        System.out.println(14);
     }
 }
