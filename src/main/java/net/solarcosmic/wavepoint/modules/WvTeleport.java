@@ -135,6 +135,10 @@ public class WvTeleport {
     }
 
     public static void sendTeleportMessage(Player player, String message) {
+        if (message.equals(WvLanguage.lang("wavepoint.waypoint_moved")) && !isCurrentlyTeleporting(player.getUniqueId())) {
+            System.out.println("Attempt to print teleport moved message after teleport");
+            return;
+        }
         String newMessage = WvPlaceholders.doPlaceholder(message, player);
         if (Objects.equals(plugin.getConfig().getString("teleport.action_type", "action"), "action")) {
             player.sendActionBar(ChatColor.translateAlternateColorCodes('&', newMessage));
