@@ -2,6 +2,7 @@ package net.solarcosmic.wavepoint.modules;
 
 import net.solarcosmic.wavepoint.Wavepoint;
 import net.solarcosmic.wavepoint.WvConfig;
+import net.solarcosmic.wavepoint.api.WvGeneralAPI;
 import net.solarcosmic.wavepoint.integrations.WvInCombatLogX;
 import net.solarcosmic.wavepoint.objects.Waypoint;
 import net.solarcosmic.wavepoint.util.BetterLogger;
@@ -22,13 +23,28 @@ public class WvWaypoints {
     private static Wavepoint plugin = Wavepoint.getInstance();
 
     public static Waypoint create(Player player, Location loc, String name) {
+        if (!player.hasPermission("waypoint.wp.create")) {
+            player.sendMessage("&cYou do not have permission to execute this!");
+            return null;
+        }
+        int wpAmount = new WvGeneralAPI().getWaypointAmount(player.getUniqueId());
+        int cap = plugin.getConfig().getInt("max_cap", 5);
+        if (Integer.signum(cap) == 1 && wpAmount >= cap) { // if positive and over cap limit
+            player.sendMessage(Wavepoint.prefix + WvLanguage.lang("wavepoint.max_waypoints_limit").replace("${limit}", String.valueOf(cap)));
+            return null;
+        }
         // maybe do something like strip /wp list then do new set?
+        int limit = plugin.getConfig().getInt("max_characters", 10);
         String newSet = name.toLowerCase().replaceAll(" ", "_");
+        if (name.length() > limit) {
+            newSet = newSet.substring(0, limit);
+            player.sendMessage(Wavepoint.prefix + WvLanguage.lang("wavepoint.max_characters_limit").replace("${limit}", String.valueOf(limit)));
+        }
         Waypoint waypoint = new Waypoint(player.getUniqueId(), loc, newSet);
         if (Wavepoint.hasCombatLogXIntegration) {
             if (WvInCombatLogX.isInCombat(player)) {
                 if (!plugin.getConfig().getBoolean("integrations.combatlogx.combat.set")) {
-                    player.sendMessage(WvLanguage.lang("wavepoint.integrations.combatlogx.cannot_set_waypoint"));
+                    player.sendMessage(Wavepoint.prefix + WvLanguage.lang("wavepoint.integrations.combatlogx.cannot_set_waypoint"));
                     return null;
                 }
             }
@@ -47,12 +63,16 @@ public class WvWaypoints {
     }
 
     public static void delete(Waypoint waypoint) {
+        Player player = Bukkit.getPlayer(waypoint.getPlayerId());
+        assert player != null;
+        if (!player.hasPermission("waypoint.wp.delete")) {
+            player.sendMessage("&cYou do not have permission to execute this!");
+            return;
+        }
         Map<String, Waypoint> playerMap = waypoints.get(waypoint.getPlayerId());
         if (playerMap != null) {
             playerMap.entrySet().removeIf(entry -> entry.getKey().equalsIgnoreCase(waypoint.getName()));
             try {
-                Player player = Bukkit.getPlayer(waypoint.getPlayerId());
-                assert player != null;
                 for (String item : plugin.getConfig().getStringList("commands.delete")) {
                     // index 0 out of bounds for length 0?
                     Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), WvPlaceholders.doPlaceholder(item, player));

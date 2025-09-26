@@ -12,6 +12,7 @@ import net.solarcosmic.wavepoint.modules.WvWaypoints;
 import net.solarcosmic.wavepoint.util.BetterLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -79,19 +80,16 @@ public final class Wavepoint extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent e) { // https://bukkit.org/threads/checking-if-player-moved-entire-block.238567/#post-2292237
-        System.out.println("Player move");
         UUID uuid = e.getPlayer().getUniqueId();
         if (WvTeleport.ignoreNextMove.contains(uuid)) {
             WvTeleport.ignoreNextMove.remove(uuid);
             return;
         }
         if (!WvTeleport.isCurrentlyTeleporting(uuid) || WvTeleport.hasRecentlyTeleported(uuid)) return;
-        System.out.println("Is currently teleporting? " + WvTeleport.isCurrentlyTeleporting(uuid));
         if (e.getFrom().getBlockX() != e.getTo().getBlockX() || e.getFrom().getBlockY() != e.getTo().getBlockY() || e.getFrom().getBlockZ() != e.getTo().getBlockZ()) {
-            System.out.println("Passed movement stage");
             WvTeleport.sendTeleportMessage(e.getPlayer(), WvLanguage.lang("wavepoint.waypoint_moved"));
             WvTeleport.setCurrentlyTeleporting(uuid, false);
-            System.out.println("Set is currently teleporting to false! Is currently teleporting?: " + WvTeleport.isCurrentlyTeleporting(uuid));
+            if (Wavepoint.isSoundOn) e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0f, 1.0f);
         }
     }
 

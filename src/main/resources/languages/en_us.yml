@@ -16,6 +16,11 @@ wavepoint:
   teleport_cooldown: "&cYou must wait ${cooldown} seconds before teleporting again!"
   wait_teleport_single: "Please wait 1 more second!"
   wait_teleport_plural: "Please wait ${seconds} more seconds!"
+  argument_unexisting: "&cThat argument does not exist!"
+  command_not_executable: "&cYou can only execute this command as a player!"
+  max_characters_limit: "&eThis waypoint has reached the maximum character limit of ${limit} and has been truncated."
+  max_waypoints_limit: "&cYou have reached the maximum number of waypoints (${limit}). Please delete a waypoint to make another one."
+  command_usage: "Usage: /wp <set/tp/delete/list/info> <name>"
 
 integrations:
   vault:

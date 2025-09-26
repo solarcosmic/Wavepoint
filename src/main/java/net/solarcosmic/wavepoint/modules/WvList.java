@@ -11,10 +11,15 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class WvList {
 
     public void showList(Player player) {
+        if (!player.hasPermission("waypoint.wp.list")) {
+            player.sendMessage("&cYou do not have permission to execute this!");
+            return;
+        }
         StringBuilder waypointString = new StringBuilder();
         ArrayList<String> wpList = WvWaypoints.buildList(player.getUniqueId());
         if (wpList.toArray().length == 0) {
@@ -30,7 +35,7 @@ public class WvList {
         } else {
             TextComponent base = new TextComponent(Wavepoint.prefix + WvLanguage.lang("wavepoint.your_waypoints") + " (" + wpList.toArray().length + ")\n" + waypointString.toString());
             for (String item : wpList) {
-                TextComponent comp = new TextComponent("  " + ChatColor.UNDERLINE + item + ChatColor.RESET);
+                TextComponent comp = Objects.equals(item, wpList.getFirst()) ? new TextComponent(ChatColor.UNDERLINE + item + ChatColor.RESET) : new TextComponent("  " + ChatColor.UNDERLINE + item + ChatColor.RESET);
                 comp.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wp info " + item));
                 comp.setHoverEvent(new HoverEvent(
                         HoverEvent.Action.SHOW_TEXT,

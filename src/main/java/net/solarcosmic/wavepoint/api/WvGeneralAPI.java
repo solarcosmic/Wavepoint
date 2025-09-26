@@ -65,4 +65,13 @@ public class WvGeneralAPI {
     public ArrayList<String> getWaypointList(UUID playerId) {
         return WvWaypoints.buildList(playerId);
     }
+
+    /**
+     * Retrieves the number of waypoints that the specific player has as an integer.
+     *
+     * @param playerId The player's unique UUID.
+     */
+    public int getWaypointAmount(UUID playerId) {
+        return getWaypointList(playerId).size();
+    }
 }

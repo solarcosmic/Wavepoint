@@ -16,6 +16,10 @@ import java.util.Date;
 
 public class WvInfo {
     public void showInfo(Player player, Waypoint waypoint) {
+        if (!player.hasPermission("waypoint.wp.info")) {
+            player.sendMessage("&cYou do not have permission to execute this!");
+            return;
+        }
         TextComponent base = new TextComponent(Wavepoint.prefix + "Info for '" + ChatColor.AQUA + waypoint.getName() + ChatColor.RESET + "'\n");
         TextComponent wpName = new TextComponent("Name: " + waypoint.getName() + '\n');
         TextComponent wpTime = new TextComponent("Created: " + new Date(waypoint.getTimestamp() * 1000) + '\n');
@@ -30,6 +34,10 @@ public class WvInfo {
         TextComponent wpClickTP = new TextComponent(ChatColor.UNDERLINE + WvLanguage.lang("wavepoint.waypoint_click_teleport"));
         wpClickTP.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wp tp " + waypoint.getName()));
         wpLoc.setHoverEvent(new HoverEvent(
+                HoverEvent.Action.SHOW_TEXT,
+                new ComponentBuilder(ChatColor.AQUA + WvLanguage.lang("wavepoint.waypoint_location_hover")).create()
+        ));
+        wpClickTP.setHoverEvent(new HoverEvent(
                 HoverEvent.Action.SHOW_TEXT,
                 new ComponentBuilder(ChatColor.AQUA + WvLanguage.lang("wavepoint.waypoint_click_teleport")).create()
         ));

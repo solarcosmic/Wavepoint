@@ -8,9 +8,23 @@ softdepend:
 commands:
   wp:
     description: The main waypoint command for Wavepoint
-    usage: "Usage: /<command> [set|list|tp|delete]"
     permission: waypoint.wp
 permissions:
   waypoint.wp:
     description: Allows using the /wp command
+    default: true
+  waypoint.wp.tp:
+    description: Allows using the /wp tp command
+    default: true
+  waypoint.wp.set:
+    description: Allows using the /wp set command
+    default: true
+  waypoint.wp.list:
+    description: Allows using the /wp list command
+    default: true
+  waypoint.wp.delete:
+    description: Allows using the /wp delete command
+    default: true
+  waypoint.wp.info:
+    description: Allows using the /wp info command
     default: true

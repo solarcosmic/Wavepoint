@@ -1,10 +1,7 @@
 package net.solarcosmic.wavepoint.commands;
 
 import net.solarcosmic.wavepoint.Wavepoint;
-import net.solarcosmic.wavepoint.modules.WvInfo;
-import net.solarcosmic.wavepoint.modules.WvList;
-import net.solarcosmic.wavepoint.modules.WvTeleport;
-import net.solarcosmic.wavepoint.modules.WvWaypoints;
+import net.solarcosmic.wavepoint.modules.*;
 import net.solarcosmic.wavepoint.objects.Waypoint;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -19,47 +16,62 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WaypointCommand implements TabExecutor {
-    public List<String> arguments = List.of("set", "list", "tp", "delete");
+    public List<String> arguments = List.of("set", "list", "tp", "delete", "info");
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(commandSender instanceof Player)) {
-            commandSender.sendMessage(ChatColor.RED + "You can only execute this command as a player!");
+            commandSender.sendMessage(WvLanguage.lang("wavepoint.command_not_executable"));
             return false;
         }
         Player player = (Player) commandSender;
         if (args.length < 1) {
+            player.sendMessage(Wavepoint.prefix + WvLanguage.lang("wavepoint.command_usage"));
             return false;
-        }
-        if (args[0].equalsIgnoreCase("list")) {
+        } else if (args[0].equalsIgnoreCase("list")) {
             new WvList().showList(player);
-        }
-        if (args[0].equalsIgnoreCase("set")) {
+        } else if (args[0].equalsIgnoreCase("set")) {
+            if (args.length < 2) {
+                player.sendMessage(Wavepoint.prefix + WvLanguage.lang("wavepoint.command_usage"));
+                return false;
+            }
             WvWaypoints.create(player, player.getLocation(), args[1]);
-        }
-        if (args[0].equalsIgnoreCase("tp")) {
+        } else if (args[0].equalsIgnoreCase("tp")) {
+            if (args.length < 2) {
+                player.sendMessage(Wavepoint.prefix + WvLanguage.lang("wavepoint.command_usage"));
+                return false;
+            }
             Waypoint wp = WvWaypoints.getWaypoint(player.getUniqueId(), args[1]);
             if (wp == null) {
-                player.sendMessage(Wavepoint.prefix + ChatColor.RED + "That waypoint does not exist!");
+                player.sendMessage(Wavepoint.prefix + WvLanguage.lang("wavepoint.argument_unexisting"));
             } else {
                 WvTeleport.teleport(player, wp);
             }
-        }
-        if (args[0].equalsIgnoreCase("delete")) {
+        } else if (args[0].equalsIgnoreCase("delete")) {
+            if (args.length < 2) {
+                player.sendMessage(Wavepoint.prefix + WvLanguage.lang("wavepoint.command_usage"));
+                return false;
+            }
             Waypoint wp = WvWaypoints.getWaypoint(player.getUniqueId(), args[1]);
             if (wp == null) {
-                player.sendMessage(Wavepoint.prefix + ChatColor.RED + "That waypoint does not exist!");
+                player.sendMessage(Wavepoint.prefix + WvLanguage.lang("wavepoint.argument_unexisting"));
             } else {
                 WvWaypoints.delete(wp);
                 player.sendMessage(Wavepoint.prefix + "Waypoint deleted.");
             }
-        }
-        if (args[0].equalsIgnoreCase("info")) {
+        } else if (args[0].equalsIgnoreCase("info")) {
+            if (args.length < 2) {
+                player.sendMessage(Wavepoint.prefix + WvLanguage.lang("wavepoint.command_usage"));
+                return false;
+            }
             Waypoint wp = WvWaypoints.getWaypoint(player.getUniqueId(), args[1]);
             if (wp == null) {
-                player.sendMessage(Wavepoint.prefix + ChatColor.RED + "That waypoint does not exist!");
+                player.sendMessage(Wavepoint.prefix + WvLanguage.lang("wavepoint.argument_unexisting"));
             } else {
                 new WvInfo().showInfo(player, wp);
             }
+        } else {
+            player.sendMessage(Wavepoint.prefix + WvLanguage.lang("wavepoint.argument_unexisting"));
+            return false;
         }
         return true;
     }

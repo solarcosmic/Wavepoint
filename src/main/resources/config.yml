@@ -15,6 +15,14 @@ prefix: "&bWavepoint »&r "
 # How long of a cooldown to wait until the user can teleport again.
 teleport_cooldown: 10
 
+# Maximum amount of waypoints a user can make.
+# Set to -1 or a negative integer for unlimited.
+max_cap: 5
+
+# Maximum amount of characters that can be used in the creation of a waypoint name.
+# Set to -1 or a negative integer for unlimited.
+max_characters: 5
+
 # Below are integrations that work with other plugins.
 # If the integration is enabled, but the plugin or requirements aren't met, nothing will happen.
 integrations:
